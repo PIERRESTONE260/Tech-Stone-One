@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tech-Stone One | Innovation & Diversité</title>
+    
+    <meta name="description" content="Tech-Stone One : Solutions innovantes en développement Web, Print NFC et maintenance électronique.">
+    <meta name="theme-color" content="#060b13">
+    <meta property="og:title" content="Tech-Stone One | Innovation">
+    <meta property="og:image" content="logo.svg">
+
     <link rel="manifest" href="manifest.json">
     <link rel="shortcut icon" href="logo.svg" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -58,10 +64,13 @@
         .call-card { background: linear-gradient(135deg, #0078d4, #00bcf2); color: white; padding: 30px; border-radius: 20px; text-align: center; margin-bottom: 50px; }
         .btn-teams { display: inline-flex; align-items: center; gap: 10px; background: white; color: #0078d4; padding: 12px 25px; border-radius: 12px; text-decoration: none; font-weight: 700; margin-top: 20px; transition: 0.3s; }
 
-        /* ÉVÉNEMENTS (IMAGES OBLIGATOIRES) */
+        /* ÉVÉNEMENTS */
+        .event-card { border: none; background: linear-gradient(to bottom, rgba(255,255,255,0.05), transparent); }
         .event-img { width: 100%; height: 190px; border-radius: 12px; object-fit: cover; margin-bottom: 15px; border: 1px solid var(--border); }
+        .badge-live { position: absolute; top: 15px; right: 15px; background: #ff3e3e; color: white; padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
-        /* ÉQUIPE (RÊVES + GITHUB + PORTE-FOLIO) */
+        /* ÉQUIPE */
         .filter-team { display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 10px; }
         .filter-btn { background: var(--border); border: none; color: white; padding: 8px 18px; border-radius: 30px; cursor: pointer; white-space: nowrap; }
         .filter-btn.active { background: var(--accent); }
@@ -73,15 +82,15 @@
         .social-links a { color: var(--text-dim); font-size: 1.4rem; transition: 0.3s; }
         .social-links a:hover { color: var(--accent); }
 
-        /* PROJETS (DOCS PDF + LIENS) */
+        /* PROJETS */
         .project-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
         .btn-mini { font-size: 0.75rem; color: var(--accent); text-decoration: none; border: 1px solid var(--accent); padding: 5px 10px; border-radius: 5px; }
 
-        /* MANUEL (SÉCURITÉ MAXIMALE) */
+        /* MANUEL */
         .manual-secure { background: white; color: #0f172a; padding: 40px; border-radius: 24px; position: relative; -webkit-user-select: none; user-select: none; box-shadow: 0 10px 40px rgba(0,0,0,0.4); }
         .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 3.5rem; opacity: 0.04; font-weight: 900; pointer-events: none; width: 100%; text-align: center; }
 
-        /* FORMULAIRE & CONTACT (WA / EMAIL) */
+        /* FORMULAIRE & CONTACT */
         form { display: flex; flex-direction: column; gap: 15px; }
         input, select, textarea { width: 100%; padding: 15px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 12px; color: white; font-family: inherit; font-size: 1rem; outline: none; }
         input:focus { border-color: var(--accent); }
@@ -138,7 +147,7 @@
                 <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200" class="hero-img" alt="Bienvenue">
                 <div class="hero-content">
                     <h1>Bienvenue chez Tech-Stone One</h1>
-                    <p>"L'innovation n'est pas seulement ce que nous créons, c'est l'avenir que nous construisons ensemble. Restons déterminés."</p>
+                    <p>"L'innovation n'est pas seulement ce que nous créons, c'est l'avenir que nous construisons ensemble."</p>
                 </div>
             </div>
 
@@ -149,130 +158,132 @@
                 <div class="card"><i class="fas fa-microchip service-icon"></i><h3>Maint. Électronique</h3><p style="color:var(--text-dim); font-size:0.9rem;">Diagnostic et informatique embarquée spécialisée.</p></div>
             </div>
 
-            <!-- evenements tech-stone one -->
-             
-
+            <div class="section-header"><h2>Événements à la Une</h2></div>
+            <div class="grid">
+                <div class="card event-card">
+                    <span class="badge-live">BIENTÔT</span>
+                    <img src="https://images.unsplash.com/photo-1505373676634-37c5453951f8?w=500" class="event-img">
+                    <h4>Conférence Tech-Afrique</h4>
+                    <p style="color:var(--text-dim); font-size:0.85rem;">Présentation de nos solutions NFC pour les universités.</p>
+                </div>
+                <div class="card event-card">
+                    <img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=500" class="event-img">
+                    <h4>Atelier Codage JS</h4>
+                    <p style="color:var(--text-dim); font-size:0.85rem;">Session interne sur les Service Workers et les PWA.</p>
+                </div>
+            </div>
             <div class="call-card">
                 <i class="fas fa-video" style="font-size: 2.5rem; margin-bottom: 15px;"></i>
-                <h2>Centre de Communication Interne</h2>
-                <p>Réunion rapide avec l'équipe ou le PDG ? Lancez l'appel maintenant via Microsoft Teams.</p>
-                <a href="https://teams.microsoft.com/l/meetup-join/..." class="btn-teams">
-                    <i class="fab fa-microsoft"></i> Rejoindre l'appel Teams
+                <h2>Communication Interne</h2>
+                <p>Réunion rapide avec l'équipe ? Lancez l'appel maintenant.</p>
+                <a href="#" class="btn-teams">
+                    <i class="fab fa-microsoft"></i> Rejoindre Microsoft Teams
                 </a>
             </div>
         </section>
 
         <section id="page-news" class="page">
-            <div class="section-header"><h2>Actualités Technologiques Google</h2></div>
+            <div class="section-header"><h2>Actualités Technologiques</h2></div>
             <div class="grid" id="google-news-container">
                 <div class="card">
                     <img src="https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?w=500" class="news-img">
                     <span class="news-source">Google Cloud</span>
-                    <h4>Nouvelle mise à jour de Gemini AI</h4>
-                    <p style="color:var(--text-dim); font-size:0.85rem;">Découvrez les dernières avancées en intelligence artificielle générative.</p>
+                    <h4>Mise à jour Gemini AI</h4>
+                    <p style="color:var(--text-dim); font-size:0.85rem;">Les dernières avancées en IA générative.</p>
                 </div>
             </div>
 
-            <div class="section-header"><h2>Actualités Internes Tech-Stone One</h2></div>
-            <div class="grid" id="internal-news-container">
-                </div>
+            <div class="section-header"><h2>Nouvelles Internes</h2></div>
+            <div class="grid" id="internal-news-container"></div>
         </section>
 
         <section id="page-agenda" class="page">
-            <div class="section-header"><h2>Agenda Technologique</h2></div>
+            <div class="section-header"><h2>Calendrier & Agenda</h2></div>
             <div class="card">
                 <div class="agenda-item">
                     <div class="agenda-date"><span style="font-size:1.2rem; font-weight:700;">18</span><span>AVR</span></div>
                     <div>
                         <h4 style="color:var(--accent);">Réunion Stratégique TS1</h4>
-                        <p style="font-size:0.85rem; color:var(--text-dim);">Discussion sur le déploiement des nouveaux terminaux NFC.</p>
+                        <p style="font-size:0.85rem; color:var(--text-dim);">Déploiement des terminaux NFC.</p>
                     </div>
                 </div>
                 <div class="agenda-item">
-                    <div class="agenda-date"><span style="font-size:1.2rem; font-weight:700;">25</span><span>AVR</span></div>
+                    <div class="agenda-date"><span style="font-size:1.2rem; font-weight:700;">22</span><span>AVR</span></div>
                     <div>
-                        <h4 style="color:var(--accent);">Webinaire Google I/O Preview</h4>
-                        <p style="font-size:0.85rem; color:var(--text-dim);">Analyse des futures API Android et Web.</p>
+                        <h4 style="color:var(--accent);">Audit de Sécurité</h4>
+                        <p style="font-size:0.85rem; color:var(--text-dim);">Revue des protocoles du manuel opérationnel.</p>
+                    </div>
+                </div>
+                <div class="agenda-item">
+                    <div class="agenda-date"><span style="font-size:1.2rem; font-weight:700;">30</span><span>AVR</span></div>
+                    <div>
+                        <h4 style="color:var(--accent);">Lancement Beta "FilmsAll"</h4>
+                        <p style="font-size:0.85rem; color:var(--text-dim);">Phase de test public de la plateforme.</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="page-team" class="page">
-            <div class="section-header"><h2>L'Équipe Multidisciplinaire</h2></div>
+            <div class="section-header"><h2>Notre Équipe</h2></div>
             <div class="filter-team">
                 <button class="filter-btn active" onclick="filterTeam('all')">Tous</button>
                 <button class="filter-btn" onclick="filterTeam('web')">Web Dev</button>
-                <button class="filter-btn" onclick="filterTeam('design')">Design & Print</button>
+                <button class="filter-btn" onclick="filterTeam('design')">Design</button>
                 <button class="filter-btn" onclick="filterTeam('elec')">Électronique</button>
             </div>
             <div class="grid" id="team-list">
                 <div class="card member-card" data-role="web">
-                    <img src="image/PDG.png" class="member-photo">
-                    <h3>PDG PS.</h3>
-                    <p style="color:var(--accent); font-weight:600;">Developpeur Web (front-end & Back-end)</p>
-                    <div class="dream-text">"Rêve : Donner une bonne navigation, à notre pays et donné vie aux grandes technologie modiale pour rendre notre pays encore plus avancé dans la technomogie... "</div>
+                    <img src="image/PDG.png" class="member-photo" alt="PDG">
+                    <h3>PDG STONE-TECH</h3>
+                    <p style="color:var(--accent); font-weight:600;">Full-stack Dev</p>
+                    <div class="dream-text">"Innover pour faire avancer la technologie dans notre pays."</div>
                     <div class="social-links">
                         <a href="#"><i class="fab fa-github"></i></a>
                         <a href="#"><i class="fas fa-briefcase"></i></a>
                     </div>
-                    <a href="https://votre-lien-portfolio.com" class="btn-portfolio">Voir le Portfolio Tech-Stone One</a>
-                </div>
-                <div class="card member-card" data-role="design">
-                    <img src="" class="member-photo">
-                    <h3></h3>
-                    <p style="color:var(--accent); font-weight:600;">Visual Designer</p>
-                    <div class="dream-text">"Rêve :"</div>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-behance"></i></a>
-                        <a href="#"><i class="fas fa-briefcase"></i></a>
-                    </div>
+                    <a href="#" class="btn-portfolio">Voir le Portfolio</a>
                 </div>
             </div>
         </section>
 
         <section id="page-projects" class="page">
-            <div class="section-header"><h2>Portefeuille de Réalisations</h2></div>
+            <div class="section-header"><h2>Réalisations</h2></div>
             <div class="grid">
                 <div class="card">
-                    <img src="/projets/filmsall.png" style="width:100%; border-radius:12px; margin-bottom:15px;">
+                    <img src="/projets/filmsall.png" style="width:100%; border-radius:12px; margin-bottom:15px;" alt="FilmsAll">
                     <h3>FilmsAll</h3>
-                    <p style="color:var(--text-dim); font-size:0.85rem;">Plateforme de streaming de films indépendants, ouvert à tous les cinémas d'Afrique. pour promouvoir le cinéma africain.</p>
+                    <p style="color:var(--text-dim); font-size:0.85rem;">Streaming pour le cinéma africain.</p>
                     <div class="project-actions">
-                        <a href="https://filmsall.netlify.app" class="btn-mini"><i class="fas fa-external-link-alt"></i> Live Projet</a>
-                        <a href="#" class="btn-mini" onclick="alert('Accès sécurisé au PDF technique en lecture seule...')"><i class="fas fa-file-pdf"></i> Voir PDF</a>
-                        <a href="https://github.com/PIERRESTONE260/filmsall.git" style="color:var(--text-dim);"><i class="fab fa-github"></i></a>
+                        <a href="https://filmsall.netlify.app" class="btn-mini"><i class="fas fa-external-link-alt"></i> Live</a>
+                        <a href="https://github.com/PIERRESTONE260/filmsall.git" style="color:var(--text-dim);"><i class="fab fa-github"></i> Source</a>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="page-manual" class="page">
-            <div class="section-header"><h2>Manuel Opérationnel Tech-Stone</h2></div>
+            <div class="section-header"><h2>Manuel Opérationnel</h2></div>
             <div class="manual-secure" oncontextmenu="return false;">
                 <div class="watermark">CONFIDENTIEL TS1</div>
-                <h3 style="margin-bottom:20px; color:#0f172a;">I. Protocoles de Qualité</h3>
-                <p>Chaque ligne de code et chaque circuit électronique doit passer le test de validation 'Stone-Prime'...</p>
+                <h3>I. Protocoles</h3>
+                <p>Validation 'Stone-Prime' obligatoire pour tout projet.</p>
                 <br>
-                <h3 style="margin-bottom:20px; color:#0f172a;">II. Confidentialité Client</h3>
-                <p>La protection des données dans le service de maintenance est régie par l'accord d'intégrité absolue...</p>
-                <br>
-                <p style="color:#d9534f; font-weight:700;">[ Toute copie, capture d'écran ou téléchargement est strictement prohibé ]</p>
+                <p style="color:#d9534f; font-weight:700;">[ Diffusion strictement interdite ]</p>
             </div>
         </section>
 
         <section id="page-contact" class="page">
-            <div class="section-header"><h2>Initier une Demande</h2></div>
+            <div class="section-header"><h2>Contact & Devis</h2></div>
             <div class="card">
                 <form id="requestForm">
-                    <input type="text" id="c_name" placeholder="Votre Nom Complet / Entreprise" required>
+                    <input type="text" id="c_name" placeholder="Nom ou Entreprise" required>
                     <select id="c_service">
-                        <option value="web">Développement Web / App</option>
-                        <option value="design">Design Graphique & Print</option>
-                        <option value="repair">Maintenance Électronique / IoT</option>
+                        <option value="web">Développement Web</option>
+                        <option value="design">Design & Print</option>
+                        <option value="repair">Maintenance IoT</option>
                     </select>
-                    <textarea id="c_msg" rows="5" placeholder="Décrivez votre besoin technique..." required></textarea>
-                    
+                    <textarea id="c_msg" rows="5" placeholder="Détails du projet..." required></textarea>
                     <div class="contact-row">
                         <button type="button" class="btn-wa" onclick="sendReq('wa')"><i class="fab fa-whatsapp"></i> WhatsApp</button>
                         <button type="button" class="btn-mail" onclick="sendReq('mail')"><i class="fas fa-envelope"></i> Email</button>
@@ -300,19 +311,16 @@
             if(pageId === 'news') loadInternalNews();
         }
 
-        // Chargement des actualités depuis un JSON (Simulé)
         function loadInternalNews() {
             const container = document.getElementById('internal-news-container');
-            // Exemple de structure JSON attendue
             const data = [
-                { "title": "Succès du projet FilmsAll", "desc": "Déploiement réussi sur Netlify.", "img": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400" },
-                { "title": "Nouveau Badge NFC v2", "desc": "Sécurité renforcée pour nos partenaires.", "img": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=400" }
+                { "title": "Succès FilmsAll", "desc": "Déploiement Netlify OK.", "img": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400" },
+                { "title": "NFC v2", "desc": "Sécurité renforcée.", "img": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=400" }
             ];
-            
             container.innerHTML = data.map(n => `
                 <div class="card">
                     <img src="${n.img}" class="news-img">
-                    <span class="news-source">TECH-STONE NEWS</span>
+                    <span class="news-source">TS NEWS</span>
                     <h4>${n.title}</h4>
                     <p style="color:var(--text-dim); font-size:0.85rem;">${n.desc}</p>
                 </div>
@@ -334,29 +342,27 @@
             const name = document.getElementById('c_name').value;
             const service = document.getElementById('c_service').value;
             const msg = document.getElementById('c_msg').value;
-            if(!name || !msg) return alert("Veuillez remplir le formulaire.");
-            const fullText = `Demande Tech-Stone One : ${name} pour le service ${service}. Projet : ${msg}`;
+            if(!name || !msg) return alert("Remplissez les champs.");
+            const fullText = `Tech-Stone One : ${name} | ${service}. Projet : ${msg}`;
             if(type === 'wa') window.open(`https://wa.me/243856178369?text=${encodeURIComponent(fullText)}`);
             else window.location.href = `mailto:techstoneone@gmail.com?subject=Demande ${service}&body=${fullText}`;
         }
 
-        document.addEventListener('contextmenu', e => {
-            if(document.getElementById('page-manual').classList.contains('active')) {
+        // Sécurité contre la copie
+        document.addEventListener('keydown', e => {
+            if (e.ctrlKey && (e.key === 'c' || e.key === 's' || e.key === 'u')) {
                 e.preventDefault();
-                alert("Action non autorisée sur ce document confidentiel.");
             }
         });
-
+        
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-            .then(() => console.log("PWA installable prête !"))
-            .catch(err => console.log("Erreur PWA", err));
+            navigator.serviceWorker.register('sw.js').catch(err => console.log(err));
         }
     </script>
 
     <footer>
         <div style="text-align:center; padding:20px; color:var(--text-dim); font-size:0.9rem; border-top:1px solid var(--border);">
-            &copy; 2026 Tech-Stone One. | <a href="#" style="color:var(--accent); text-decoration:none;">Mentions Légales</a>
+            &copy; 2026 Tech-Stone One. | Propulsé par l'innovation.
         </div>
     </footer>
 </body>
