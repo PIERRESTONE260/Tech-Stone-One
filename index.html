@@ -26,6 +26,13 @@
         .drawer-item { display: flex; align-items: center; gap: 15px; color: var(--text); text-decoration: none; margin-bottom: 30px; font-size: 1.1rem; cursor: pointer; font-weight: 500; }
         .drawer-item i { color: var(--accent); width: 25px; }
 
+        /* HERO SECTION */
+        .hero { width: 100%; height: 400px; position: relative; border-radius: 24px; overflow: hidden; margin-bottom: 40px; border: 1px solid var(--border); }
+        .hero-img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.5); }
+        .hero-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 90%; }
+        .hero-content h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 15px; color: #fff; }
+        .hero-content p { font-size: 1.1rem; color: #e2e8f0; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+
         /* CONTENT LAYOUT */
         .main-container { max-width: 1200px; margin: 110px auto 0; padding: 0 20px; }
         .section-header { margin-bottom: 30px; border-left: 5px solid var(--accent); padding-left: 15px; }
@@ -37,6 +44,19 @@
 
         /* SERVICES */
         .service-icon { font-size: 2.2rem; color: var(--accent); margin-bottom: 15px; display: block; }
+
+        /* NEWS */
+        .news-img { width: 100%; height: 160px; border-radius: 12px; object-fit: cover; margin-bottom: 15px; }
+        .news-source { font-size: 0.75rem; color: var(--accent); font-weight: 700; text-transform: uppercase; }
+
+        /* AGENDA */
+        .agenda-item { display: flex; gap: 20px; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 15px; margin-bottom: 15px; border-left: 3px solid var(--accent); }
+        .agenda-date { text-align: center; min-width: 50px; }
+        .agenda-date span { display: block; }
+
+        /* CALL AREA */
+        .call-card { background: linear-gradient(135deg, #0078d4, #00bcf2); color: white; padding: 30px; border-radius: 20px; text-align: center; margin-bottom: 50px; }
+        .btn-teams { display: inline-flex; align-items: center; gap: 10px; background: white; color: #0078d4; padding: 12px 25px; border-radius: 12px; text-decoration: none; font-weight: 700; margin-top: 20px; transition: 0.3s; }
 
         /* ÉVÉNEMENTS (IMAGES OBLIGATOIRES) */
         .event-img { width: 100%; height: 190px; border-radius: 12px; object-fit: cover; margin-bottom: 15px; border: 1px solid var(--border); }
@@ -69,27 +89,31 @@
         .btn-wa { background: #25D366; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; }
         .btn-mail { background: var(--accent); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; }
 
+        /* BOUTON PORTFOLIO */
+        .btn-portfolio { display: inline-block; width: 100%; text-align: center; background: transparent; color: var(--accent); border: 2px solid var(--accent); padding: 12px; border-radius: 12px; font-weight: 600; text-decoration: none; transition: 0.3s; margin-top: 15px; }
+        .btn-portfolio:hover { background: var(--accent); color: white; }
+
         /* UTILS */
         .page { display: none; }
         .page.active { display: block; animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        @media (min-width: 992px) { .hamburger { display: none; } .desktop-nav { display: flex; gap: 30px; } .desktop-nav a { color: var(--text-dim); text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.3s; } .desktop-nav a.active { color: var(--accent); } }
+        @media (min-width: 992px) { .hamburger { display: none; } .desktop-nav { display: flex; gap: 20px; } .desktop-nav a { color: var(--text-dim); text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 0.9rem; } .desktop-nav a.active { color: var(--accent); } }
         @media (max-width: 991px) { .desktop-nav { display: none; } }
     </style>
 </head>
 <body>
 
-    <!-- OVERLAY NAVIGATION -->
     <div class="drawer" id="sidebar">
-        <div class="drawer-item" onclick="showPage('home')"><i class="fas fa-th-large"></i> Services Hub</div>
+        <div class="drawer-item" onclick="showPage('home')"><i class="fas fa-th-large"></i> Hub Services</div>
+        <div class="drawer-item" onclick="showPage('news')"><i class="fas fa-newspaper"></i> Actualités</div>
+        <div class="drawer-item" onclick="showPage('agenda')"><i class="fas fa-calendar-alt"></i> Agenda</div>
         <div class="drawer-item" onclick="showPage('team')"><i class="fas fa-users"></i> L'Équipe</div>
         <div class="drawer-item" onclick="showPage('projects')"><i class="fas fa-layer-group"></i> Réalisations</div>
         <div class="drawer-item" onclick="showPage('manual')"><i class="fas fa-shield-halved"></i> Manuel Interne</div>
         <div class="drawer-item" onclick="showPage('contact')"><i class="fas fa-paper-plane"></i> Demandes</div>
     </div>
 
-    <!-- HEADER -->
     <header class="top-bar">
         <div class="logo-box" onclick="showPage('home')">
             <img src="logo.svg" alt="TS1" class="logo-img">
@@ -97,6 +121,8 @@
         </div>
         <div class="desktop-nav">
             <a onclick="showPage('home')" class="active" id="d-home">Hub</a>
+            <a onclick="showPage('news')" id="d-news">Actualités</a>
+            <a onclick="showPage('agenda')" id="d-agenda">Agenda</a>
             <a onclick="showPage('team')" id="d-team">Équipe</a>
             <a onclick="showPage('projects')" id="d-projects">Projets</a>
             <a onclick="showPage('manual')" id="d-manual">Manuel</a>
@@ -107,8 +133,15 @@
 
     <main class="main-container">
 
-        <!-- PAGE SERVICES & ÉVÉNEMENTS -->
         <section id="page-home" class="page active">
+            <div class="hero">
+                <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=1200" class="hero-img" alt="Bienvenue">
+                <div class="hero-content">
+                    <h1>Bienvenue chez Tech-Stone One</h1>
+                    <p>"L'innovation n'est pas seulement ce que nous créons, c'est l'avenir que nous construisons ensemble. Restons déterminés."</p>
+                </div>
+            </div>
+
             <div class="section-header"><h2>Nos Services Experts</h2></div>
             <div class="grid">
                 <div class="card"><i class="fas fa-laptop-code service-icon"></i><h3>Dév. Web & Apps</h3><p style="color:var(--text-dim); font-size:0.9rem;">Solutions cloud et interfaces haute performance.</p></div>
@@ -116,24 +149,55 @@
                 <div class="card"><i class="fas fa-microchip service-icon"></i><h3>Maint. Électronique</h3><p style="color:var(--text-dim); font-size:0.9rem;">Diagnostic et informatique embarquée spécialisée.</p></div>
             </div>
 
-            <div class="section-header"><h2>Événements & Conférences</h2></div>
-            <div class="grid">
+            <!-- evenements tech-stone one -->
+             
+
+            <div class="call-card">
+                <i class="fas fa-video" style="font-size: 2.5rem; margin-bottom: 15px;"></i>
+                <h2>Centre de Communication Interne</h2>
+                <p>Réunion rapide avec l'équipe ou le PDG ? Lancez l'appel maintenant via Microsoft Teams.</p>
+                <a href="https://teams.microsoft.com/l/meetup-join/..." class="btn-teams">
+                    <i class="fab fa-microsoft"></i> Rejoindre l'appel Teams
+                </a>
+            </div>
+        </section>
+
+        <section id="page-news" class="page">
+            <div class="section-header"><h2>Actualités Technologiques Google</h2></div>
+            <div class="grid" id="google-news-container">
                 <div class="card">
-                    <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600" class="event-img" alt="Conférence">
-                    <span style="color:var(--accent); font-weight:700; font-size:0.8rem;">JANVIER 2025</span>
-                    <h4 style="margin:5px 0;">Conférence Tech-Innovation</h4>
-                    <p style="color:var(--text-dim); font-size:0.85rem;">Présentation de nos nouveaux protocoles de sécurité IoT.</p>
+                    <img src="https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?w=500" class="news-img">
+                    <span class="news-source">Google Cloud</span>
+                    <h4>Nouvelle mise à jour de Gemini AI</h4>
+                    <p style="color:var(--text-dim); font-size:0.85rem;">Découvrez les dernières avancées en intelligence artificielle générative.</p>
                 </div>
-                <div class="card">
-                    <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=600" class="event-img" alt="Workshop">
-                    <span style="color:var(--accent); font-weight:700; font-size:0.8rem;">DÉCEMBRE 2024</span>
-                    <h4 style="margin:5px 0;">Workshop Design & NFC</h4>
-                    <p style="color:var(--text-dim); font-size:0.85rem;">Atelier de création de badges interactifs pour entreprises.</p>
+            </div>
+
+            <div class="section-header"><h2>Actualités Internes Tech-Stone One</h2></div>
+            <div class="grid" id="internal-news-container">
+                </div>
+        </section>
+
+        <section id="page-agenda" class="page">
+            <div class="section-header"><h2>Agenda Technologique</h2></div>
+            <div class="card">
+                <div class="agenda-item">
+                    <div class="agenda-date"><span style="font-size:1.2rem; font-weight:700;">18</span><span>AVR</span></div>
+                    <div>
+                        <h4 style="color:var(--accent);">Réunion Stratégique TS1</h4>
+                        <p style="font-size:0.85rem; color:var(--text-dim);">Discussion sur le déploiement des nouveaux terminaux NFC.</p>
+                    </div>
+                </div>
+                <div class="agenda-item">
+                    <div class="agenda-date"><span style="font-size:1.2rem; font-weight:700;">25</span><span>AVR</span></div>
+                    <div>
+                        <h4 style="color:var(--accent);">Webinaire Google I/O Preview</h4>
+                        <p style="font-size:0.85rem; color:var(--text-dim);">Analyse des futures API Android et Web.</p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- PAGE ÉQUIPE (FILTRAGE + PORTE-FOLIOS) -->
         <section id="page-team" class="page">
             <div class="section-header"><h2>L'Équipe Multidisciplinaire</h2></div>
             <div class="filter-team">
@@ -143,52 +207,46 @@
                 <button class="filter-btn" onclick="filterTeam('elec')">Électronique</button>
             </div>
             <div class="grid" id="team-list">
-                <!-- Membre 1 -->
                 <div class="card member-card" data-role="web">
-                    <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=200" class="member-photo">
-                    <h3>Jean-Samuel K.</h3>
-                    <p style="color:var(--accent); font-weight:600;">Fullstack Engineer</p>
-                    <div class="dream-text">"Rêve : Digitaliser l'accès à l'énergie propre en Afrique."</div>
+                    <img src="image/PDG.png" class="member-photo">
+                    <h3>PDG PS.</h3>
+                    <p style="color:var(--accent); font-weight:600;">Developpeur Web (front-end & Back-end)</p>
+                    <div class="dream-text">"Rêve : Donner une bonne navigation, à notre pays et donné vie aux grandes technologie modiale pour rendre notre pays encore plus avancé dans la technomogie... "</div>
                     <div class="social-links">
                         <a href="#"><i class="fab fa-github"></i></a>
                         <a href="#"><i class="fas fa-briefcase"></i></a>
                     </div>
+                    <a href="https://votre-lien-portfolio.com" class="btn-portfolio">Voir le Portfolio Tech-Stone One</a>
                 </div>
-                <!-- Membre 2 -->
                 <div class="card member-card" data-role="design">
-                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200" class="member-photo">
-                    <h3>Alice Marie L.</h3>
+                    <img src="" class="member-photo">
+                    <h3></h3>
                     <p style="color:var(--accent); font-weight:600;">Visual Designer</p>
-                    <div class="dream-text">"Rêve : Créer l'identité visuelle de la première ville du futur."</div>
+                    <div class="dream-text">"Rêve :"</div>
                     <div class="social-links">
                         <a href="#"><i class="fab fa-behance"></i></a>
                         <a href="#"><i class="fas fa-briefcase"></i></a>
                     </div>
                 </div>
             </div>
-
-            <div class="section-header"><h2>Nos Partenaires</h2></div>
-            <div class="card"><p style="text-align: center; color:var(--text-dim);">EcoLogistique Afrique | FinanceGreen Hub | ImmoVision Partners</p></div>
         </section>
 
-        <!-- PAGE PROJETS (DOCS PDF + LIENS) -->
         <section id="page-projects" class="page">
             <div class="section-header"><h2>Portefeuille de Réalisations</h2></div>
             <div class="grid">
                 <div class="card">
-                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500" style="width:100%; border-radius:12px; margin-bottom:15px;">
-                    <h3>Dashboard Industriel V1</h3>
-                    <p style="color:var(--text-dim); font-size:0.85rem;">Système de monitoring en temps réel pour usines.</p>
+                    <img src="/projets/filmsall.png" style="width:100%; border-radius:12px; margin-bottom:15px;">
+                    <h3>FilmsAll</h3>
+                    <p style="color:var(--text-dim); font-size:0.85rem;">Plateforme de streaming de films indépendants, ouvert à tous les cinémas d'Afrique. pour promouvoir le cinéma africain.</p>
                     <div class="project-actions">
-                        <a href="#" class="btn-mini"><i class="fas fa-external-link-alt"></i> Live Projet</a>
+                        <a href="https://filmsall.netlify.app" class="btn-mini"><i class="fas fa-external-link-alt"></i> Live Projet</a>
                         <a href="#" class="btn-mini" onclick="alert('Accès sécurisé au PDF technique en lecture seule...')"><i class="fas fa-file-pdf"></i> Voir PDF</a>
-                        <a href="#" style="color:var(--text-dim);"><i class="fab fa-github"></i></a>
+                        <a href="https://github.com/PIERRESTONE260/filmsall.git" style="color:var(--text-dim);"><i class="fab fa-github"></i></a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- PAGE MANUEL (PROTECTION MAXIMALE) -->
         <section id="page-manual" class="page">
             <div class="section-header"><h2>Manuel Opérationnel Tech-Stone</h2></div>
             <div class="manual-secure" oncontextmenu="return false;">
@@ -203,7 +261,6 @@
             </div>
         </section>
 
-        <!-- PAGE CONTACT (WA / EMAIL) -->
         <section id="page-contact" class="page">
             <div class="section-header"><h2>Initier une Demande</h2></div>
             <div class="card">
@@ -227,7 +284,6 @@
     </main>
 
     <script>
-        // NAVIGATION ENGINE
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
 
         function showPage(pageId) {
@@ -240,55 +296,68 @@
             
             document.getElementById('sidebar').classList.remove('open');
             window.scrollTo(0, 0);
+
+            if(pageId === 'news') loadInternalNews();
         }
 
-        // TEAM FILTERING
+        // Chargement des actualités depuis un JSON (Simulé)
+        function loadInternalNews() {
+            const container = document.getElementById('internal-news-container');
+            // Exemple de structure JSON attendue
+            const data = [
+                { "title": "Succès du projet FilmsAll", "desc": "Déploiement réussi sur Netlify.", "img": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400" },
+                { "title": "Nouveau Badge NFC v2", "desc": "Sécurité renforcée pour nos partenaires.", "img": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=400" }
+            ];
+            
+            container.innerHTML = data.map(n => `
+                <div class="card">
+                    <img src="${n.img}" class="news-img">
+                    <span class="news-source">TECH-STONE NEWS</span>
+                    <h4>${n.title}</h4>
+                    <p style="color:var(--text-dim); font-size:0.85rem;">${n.desc}</p>
+                </div>
+            `).join('');
+        }
+
         function filterTeam(role) {
             const members = document.querySelectorAll('.member-card');
             const btns = document.querySelectorAll('.filter-btn');
             btns.forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-
+            if(event) event.target.classList.add('active');
             members.forEach(m => {
                 if(role === 'all' || m.getAttribute('data-role') === role) m.style.display = 'block';
                 else m.style.display = 'none';
             });
         }
 
-        // CONTACT ENGINE (WA / MAIL)
         function sendReq(type) {
             const name = document.getElementById('c_name').value;
             const service = document.getElementById('c_service').value;
             const msg = document.getElementById('c_msg').value;
             if(!name || !msg) return alert("Veuillez remplir le formulaire.");
-
             const fullText = `Demande Tech-Stone One : ${name} pour le service ${service}. Projet : ${msg}`;
-            if(type === 'wa') window.open(`https://wa.me/243992846700?text=${encodeURIComponent(fullText)}`);
+            if(type === 'wa') window.open(`https://wa.me/243856178369?text=${encodeURIComponent(fullText)}`);
             else window.location.href = `mailto:techstoneone@gmail.com?subject=Demande ${service}&body=${fullText}`;
         }
 
-        // SECURITY (MANUAL PROTECTION)
         document.addEventListener('contextmenu', e => {
             if(document.getElementById('page-manual').classList.contains('active')) {
                 e.preventDefault();
                 alert("Action non autorisée sur ce document confidentiel.");
             }
         });
-        document.addEventListener('keydown', e => {
-            if(e.ctrlKey && (e.key === 'p' || e.key === 's' || e.key === 'c')) {
-                if(document.getElementById('page-manual').classList.contains('active')) {
-                    e.preventDefault();
-                    alert("Sécurité TS1 : Impression et copie désactivées.");
-                }
-            }
-        });
 
-        // Enregistrement du Service Worker pour l'installation mobile
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js')
             .then(() => console.log("PWA installable prête !"))
             .catch(err => console.log("Erreur PWA", err));
         }
     </script>
+
+    <footer>
+        <div style="text-align:center; padding:20px; color:var(--text-dim); font-size:0.9rem; border-top:1px solid var(--border);">
+            &copy; 2026 Tech-Stone One. | <a href="#" style="color:var(--accent); text-decoration:none;">Mentions Légales</a>
+        </div>
+    </footer>
 </body>
 </html>
