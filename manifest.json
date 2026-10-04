@@ -1,25 +1,38 @@
 {
+  "id": "/index.html",
   "name": "Tech-Stone One",
   "short_name": "TS1",
   "description": "Innovation & Diversité - Hub Technologique",
+  "lang": "fr",
+  "dir": "ltr",
   "start_url": "index.html",
+  "scope": "./",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#060b13",
-  "theme_color": "#0084ff",
+  "theme_color": "#060b13",
+  "categories": ["business", "technology", "education"],
   "icons": [
     {
       "src": "logo.svg",
-      "sizes": "192x192",
+      "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "logo.svg",
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "Tech-StoneOne.png",
+      "src": "icons/icon-maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -27,7 +40,8 @@
     {
       "src": "Tech-StoneOne.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }

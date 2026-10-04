@@ -1,0 +1,6 @@
+# Bloque l'accès public direct aux fichiers SQL sensibles
+/schema.sql      /index.html  404!
+/seed-site.sql   /index.html  404!
+
+# Redirection SPA par défaut (si applicable)
+/*    /index.html   200

@@ -2,185 +2,211 @@
 <html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport"
-            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Tech-Stone One | Innovation & Diversité</title>
 
-        <meta name="description"
-            content="Tech-Stone One : Solutions innovantes en développement Web, Print NFC et maintenance électronique.">
+        <meta name="description" content="Tech-Stone One : Solutions innovantes en développement Web, Print NFC et maintenance électronique.">
         <meta name="theme-color" content="#060b13">
-        <meta property="og:title" content="Tech-Stone One | Innovation">
-        <meta property="og:image" content="logo.svg">
+        <meta name="referrer" content="strict-origin-when-cross-origin">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="Tech-Stone One | Innovation & Diversité">
+        <meta property="og:description" content="Solutions innovantes en développement Web, Print NFC et maintenance électronique.">
+        <meta property="og:image" content="Tech-StoneOne.png">
 
         <link rel="manifest" href="manifest.json">
         <link rel="shortcut icon" href="logo.svg" type="image/x-icon">
-        <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
-            rel="stylesheet">
+        <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+        <meta name="apple-mobile-web-app-title" content="TS1">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
         <link rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+            integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer">
 
         <style>
-        :root { --bg: #060b13; --card: rgba(16, 24, 39, 0.95); --accent: #0084ff; --border: rgba(255, 255, 255, 0.1); --text: #ffffff; --text-dim: #94a3b8; }
+        :root { --bg: #060b13; --card: rgba(16, 24, 39, 0.95); --accent: #0084ff; --border: rgba(255, 255, 255, 0.1); --text: #ffffff; --text-dim: #94a3b8; --green: #0e7a4e; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; padding-bottom: 90px; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; padding-bottom: 30px; }
+        a, button { font-family: inherit; }
+        :focus-visible { outline: 3px solid #66b5ff; outline-offset: 2px; }
+        .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+        .skip-link { position: absolute; left: -999px; top: 10px; background: var(--accent); color: #fff; padding: 10px 16px; border-radius: 8px; z-index: 3000; text-decoration: none; }
+        .skip-link:focus { left: 10px; }
 
         /* HEADER & NAVIGATION */
         .top-bar { position: fixed; top: 0; width: 100%; height: 75px; background: rgba(6, 11, 19, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding: 0 5%; z-index: 1000; }
-        .logo-box { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .logo-box { display: flex; align-items: center; gap: 12px; cursor: pointer; text-decoration: none; color: var(--text); }
         .logo-img { width: 45px; height: 45px; }
-        
-        /* NOUVELLE FONCTIONNALITÉ : Indicateur système tech */
-        .system-status { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; background: rgba(0, 132, 255, 0.1); border: 1px solid rgba(0, 132, 255, 0.3); padding: 5px 12px; border-radius: 20px; color: var(--accent); font-weight: 600; }
+
+        .system-status { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; background: rgba(0, 132, 255, 0.1); border: 1px solid rgba(0, 132, 255, 0.3); padding: 5px 12px; border-radius: 20px; color: #66b5ff; font-weight: 600; }
         .status-dot { width: 8px; height: 8px; background: #00ff66; border-radius: 50%; box-shadow: 0 0 8px #00ff66; animation: pulse-green 2s infinite; }
+        .status-dot.off { background: #ff3e3e; box-shadow: 0 0 8px #ff3e3e; animation: none; }
         @keyframes pulse-green { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
         /* MENU HAMBURGER (MOBILE) */
-        .hamburger { font-size: 1.6rem; cursor: pointer; color: var(--text); }
-        .drawer { position: fixed; top: 0; right: -100%; width: 280px; height: 100%; background: #0a0e17; z-index: 2001; transition: 0.4s; padding: 40px 25px; border-left: 1px solid var(--border); box-shadow: -10px 0 30px rgba(0,0,0,0.5); }
-        .drawer.open { right: 0; }
-        .drawer-item { display: flex; align-items: center; gap: 15px; color: var(--text); text-decoration: none; margin-bottom: 30px; font-size: 1.1rem; cursor: pointer; font-weight: 500; }
+        .hamburger { font-size: 1.6rem; cursor: pointer; color: var(--text); background: none; border: none; padding: 8px; }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0s 0.3s; }
+        .overlay.open { opacity: 1; visibility: visible; transition: opacity 0.3s; }
+        .drawer { position: fixed; top: 0; right: -100%; width: 280px; max-width: 85%; height: 100%; background: #0a0e17; z-index: 2001; transition: right 0.4s, visibility 0s 0.4s; visibility: hidden; padding: 25px; border-left: 1px solid var(--border); box-shadow: -10px 0 30px rgba(0,0,0,0.5); overflow-y: auto; }
+        .drawer.open { right: 0; visibility: visible; transition: right 0.4s; }
+        .drawer-close { display: block; margin: 0 0 25px auto; background: none; border: 1px solid var(--border); color: var(--text); width: 42px; height: 42px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; }
+        .drawer-item { display: flex; align-items: center; gap: 15px; color: var(--text); text-decoration: none; margin-bottom: 28px; font-size: 1.1rem; cursor: pointer; font-weight: 500; background: none; border: none; width: 100%; text-align: left; }
         .drawer-item i { color: var(--accent); width: 25px; }
 
-        /* HERO SECTION - IMAGE MISE À JOUR & DESIGN ÉPURÉ */
+        .install-btn { background: var(--accent); color: #fff; border: none; padding: 8px 14px; border-radius: 20px; font-weight: 600; cursor: pointer; font-size: 0.85rem; }
+        .install-btn[hidden] { display: none; }
+
+        /* HERO */
         .hero { width: 100%; height: 420px; position: relative; border-radius: 24px; overflow: hidden; margin-bottom: 40px; border: 1px solid var(--border); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
         .hero-img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.45) contrast(1.1); transform: scale(1.02); transition: transform 6s ease; }
         .hero:hover .hero-img { transform: scale(1.0); }
         .hero-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 90%; }
         .hero-content h1 { font-size: 2.3rem; font-weight: 800; margin-bottom: 15px; color: #fff; text-shadow: 0 4px 15px rgba(0,0,0,0.6); }
-        .hero-content p { font-size: 1.1rem; color: #cbd5e1; max-width: 600px; margin: 0 auto; line-height: 1.6; font-weight: 300; }
+        .hero-content p { font-size: 1.1rem; color: #e2e8f0; max-width: 600px; margin: 0 auto; line-height: 1.6; font-weight: 400; }
 
         /* CONTENT LAYOUT */
         .main-container { max-width: 1200px; margin: 110px auto 0; padding: 0 20px; }
         .section-header { margin-bottom: 30px; border-left: 5px solid var(--accent); padding-left: 15px; }
         .section-header h2 { font-size: 1.6rem; font-weight: 700; }
-        
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 50px; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 20px; margin-bottom: 50px; }
         .card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 25px; position: relative; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(10px); }
         .card:hover { border-color: var(--accent); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0, 132, 255, 0.1); }
+        .muted { color: var(--text-dim); font-size: 0.9rem; }
+        .muted-sm { color: var(--text-dim); font-size: 0.85rem; }
+        .empty-note { color: var(--text-dim); padding: 10px 0 20px; font-size: 0.95rem; }
 
-        /* SERVICES */
         .service-icon { font-size: 2.2rem; color: var(--accent); margin-bottom: 15px; display: block; }
 
-        /* NEWS */
         .news-img { width: 100%; height: 160px; border-radius: 12px; object-fit: cover; margin-bottom: 15px; }
-        .news-source { font-size: 0.75rem; color: var(--accent); font-weight: 700; text-transform: uppercase; }
+        .news-source { font-size: 0.75rem; color: #66b5ff; font-weight: 700; text-transform: uppercase; }
 
         /* AGENDA */
+        .agenda-sub { color: var(--text-dim); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin: 5px 0 15px; }
         .agenda-item { display: flex; gap: 20px; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 15px; margin-bottom: 15px; border-left: 3px solid var(--accent); }
+        .agenda-item.past { opacity: 0.55; border-left-color: var(--text-dim); }
+        .agenda-item h4 { color: #66b5ff; }
         .agenda-date { text-align: center; min-width: 50px; }
         .agenda-date span { display: block; }
+        .agenda-empty { color: var(--text-dim); font-size: 0.9rem; padding: 10px 0 20px; }
 
         /* CALL AREA */
         .call-card { background: linear-gradient(135deg, #0078d4, #00bcf2); color: white; padding: 30px; border-radius: 20px; text-align: center; margin-bottom: 50px; box-shadow: 0 10px 25px rgba(0,120,212,0.3); }
-        .btn-teams { display: inline-flex; align-items: center; gap: 10px; background: white; color: #0078d4; padding: 12px 25px; border-radius: 12px; text-decoration: none; font-weight: 700; margin-top: 20px; transition: 0.3s; }
+        .call-card.recruit { background: linear-gradient(135deg, #128C7E, #0b5d4f); box-shadow: 0 10px 25px rgba(14,122,78,0.3); }
+        .btn-teams { display: inline-flex; align-items: center; gap: 10px; background: white; color: #005a9e; padding: 12px 25px; border-radius: 12px; text-decoration: none; font-weight: 700; margin-top: 20px; transition: 0.3s; }
         .btn-teams:hover { transform: scale(1.03); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .btn-teams.green { background: var(--green); color: #fff; border: 2px solid #fff; margin-top: 0; }
 
         /* ÉVÉNEMENTS */
         .event-card { border: none; background: linear-gradient(to bottom, rgba(255,255,255,0.05), transparent); }
         .event-img { width: 100%; height: 190px; border-radius: 12px; object-fit: cover; margin-bottom: 15px; border: 1px solid var(--border); }
-        .badge-live { position: absolute; top: 15px; right: 15px; background: #ff3e3e; color: white; padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; animation: pulse 1.5s infinite; }
+        .badge-live { position: absolute; top: 15px; right: 15px; background: #d12020; color: white; padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
         /* ÉQUIPE */
         .filter-team { display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 10px; }
-        .filter-btn { background: var(--border); border: none; color: white; padding: 8px 18px; border-radius: 30px; cursor: pointer; white-space: nowrap; transition: 0.2s; }
-        .filter-btn.active { background: var(--accent); }
+        .filter-btn { background: rgba(255,255,255,0.12); border: none; color: white; padding: 8px 18px; border-radius: 30px; cursor: pointer; white-space: nowrap; transition: 0.2s; }
+        .filter-btn.active { background: #0066cc; }
+        .team-empty { color: var(--text-dim); padding: 20px 0; }
+        .team-empty[hidden] { display: none; }
 
         .member-card { text-align: center; }
         .member-photo { width: 85px; height: 85px; border-radius: 50%; border: 3px solid var(--accent); margin: 0 auto 15px; display: block; object-fit: cover; }
+        .role { color: #66b5ff; font-weight: 600; }
         .dream-text { font-size: 0.8rem; font-style: italic; color: var(--text-dim); margin: 12px 0; background: rgba(0,132,255,0.05); padding: 8px; border-radius: 8px; }
         .social-links { display: flex; justify-content: center; gap: 20px; margin-top: 15px; }
         .social-links a { color: var(--text-dim); font-size: 1.4rem; transition: 0.3s; }
         .social-links a:hover { color: var(--accent); }
+        .is-disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
 
         /* PROJETS */
         .project-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
-        .btn-mini { font-size: 0.75rem; color: var(--accent); text-decoration: none; border: 1px solid var(--accent); padding: 5px 10px; border-radius: 5px; transition: 0.2s; }
+        .btn-mini { font-size: 0.75rem; color: #66b5ff; text-decoration: none; border: 1px solid var(--accent); padding: 5px 10px; border-radius: 5px; transition: 0.2s; }
         .btn-mini:hover { background: var(--accent); color: white; }
 
-        /* MANUEL */
-        .manual-secure { background: white; color: #0f172a; padding: 40px; border-radius: 24px; position: relative; -webkit-user-select: none; user-select: none; box-shadow: 0 10px 40px rgba(0,0,0,0.4); }
-        .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 3.5rem; opacity: 0.04; font-weight: 900; pointer-events: none; width: 100%; text-align: center; }
+        /* MANUEL (verrouillé) */
+        .lock-card { max-width: 560px; margin: 0 auto 50px; text-align: center; }
+        .lock-card h3 { margin-bottom: 10px; }
 
         /* FORMULAIRE & CONTACT */
         form { display: flex; flex-direction: column; gap: 15px; }
         input, select, textarea { width: 100%; padding: 15px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 12px; color: white; font-family: inherit; font-size: 1rem; outline: none; transition: 0.3s; }
+        select option { color: #0f172a; }
         input:focus, textarea:focus, select:focus { border-color: var(--accent); background: rgba(255,255,255,0.07); }
+        .hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+        .form-note { min-height: 1.4em; font-size: 0.9rem; color: #ffb4b4; }
+        .form-note.ok { color: #7ee2a8; }
         .contact-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .btn-wa { background: #25D366; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; transition: 0.3s; }
+        .btn-wa { background: var(--green); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; transition: 0.3s; font-size: 1rem; }
         .btn-wa:hover { opacity: 0.9; transform: translateY(-2px); }
-        .btn-mail { background: var(--accent); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; transition: 0.3s; }
+        .btn-mail { background: #0066cc; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; transition: 0.3s; font-size: 1rem; }
         .btn-mail:hover { opacity: 0.9; transform: translateY(-2px); }
 
-        /* BOUTON PORTFOLIO */
-        .btn-portfolio { display: inline-block; width: 100%; text-align: center; background: transparent; color: var(--accent); border: 2px solid var(--accent); padding: 12px; border-radius: 12px; font-weight: 600; text-decoration: none; transition: 0.3s; margin-top: 15px; }
+        .btn-portfolio { display: inline-block; width: 100%; text-align: center; background: transparent; color: #66b5ff; border: 2px solid var(--accent); padding: 12px; border-radius: 12px; font-weight: 600; text-decoration: none; transition: 0.3s; margin-top: 15px; }
         .btn-portfolio:hover { background: var(--accent); color: white; box-shadow: 0 0 15px rgba(0,132,255,0.4); }
 
         /* UTILS */
         .page { display: none; }
         .page.active { display: block; animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        @media (min-width: 992px) { .hamburger { display: none; } .desktop-nav { display: flex; gap: 20px; align-items: center; } .desktop-nav a { color: var(--text-dim); text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 0.9rem; } .desktop-nav a.active { color: var(--accent); } }
+
+        @media (min-width: 992px) { .hamburger { display: none; } .desktop-nav { display: flex; gap: 20px; align-items: center; } .desktop-nav a { color: var(--text-dim); text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 0.9rem; } .desktop-nav a:hover { color: var(--text); } .desktop-nav a.active { color: #66b5ff; } }
         @media (max-width: 991px) { .desktop-nav { display: none; } }
+        @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
     </style>
     </head>
     <body>
 
-        <div class="drawer" id="sidebar">
-            <div class="drawer-item" onclick="showPage('home')"><i
-                    class="fas fa-th-large"></i> Hub Services</div>
-            <div class="drawer-item" onclick="showPage('news')"><i
-                    class="fas fa-newspaper"></i> Actualités</div>
-            <div class="drawer-item" onclick="showPage('agenda')"><i
-                    class="fas fa-calendar-alt"></i> Agenda</div>
-            <div class="drawer-item" onclick="showPage('team')"><i
-                    class="fas fa-users"></i> L'Équipe</div>
-            <div class="drawer-item" onclick="showPage('projects')"><i
-                    class="fas fa-layer-group"></i> Réalisations</div>
-            <div class="drawer-item" onclick="showPage('manual')"><i
-                    class="fas fa-shield-halved"></i> Manuel Interne</div>
-            <div class="drawer-item" onclick="showPage('contact')"><i
-                    class="fas fa-paper-plane"></i> Demandes</div>
-        </div>
+        <a href="#main" class="skip-link" id="skip-link">Aller au contenu</a>
+
+        <div class="overlay" id="overlay"></div>
+
+        <nav class="drawer" id="sidebar" aria-label="Menu principal" aria-hidden="true">
+            <button type="button" class="drawer-close" id="drawer-close" aria-label="Fermer le menu"><i class="fas fa-xmark"></i></button>
+            <a class="drawer-item" href="#home"><i class="fas fa-th-large"></i> Hub Services</a>
+            <a class="drawer-item" href="#news"><i class="fas fa-newspaper"></i> Actualités</a>
+            <a class="drawer-item" href="#agenda"><i class="fas fa-calendar-alt"></i> Agenda</a>
+            <a class="drawer-item" href="#team"><i class="fas fa-users"></i> L'Équipe</a>
+            <a class="drawer-item" href="#projects"><i class="fas fa-layer-group"></i> Réalisations</a>
+            <a class="drawer-item" href="#manual"><i class="fas fa-shield-halved"></i> Manuel Interne</a>
+            <a class="drawer-item" href="#contact"><i class="fas fa-paper-plane"></i> Demandes</a>
+            <a class="drawer-item" href="academy.html"><i class="fas fa-graduation-cap"></i> TS1 Academy</a>
+            <a class="drawer-item" href="membre.html"><i class="fas fa-lock"></i> Espace membre</a>
+            <button type="button" class="drawer-item install-btn-drawer install-btn" hidden><i class="fas fa-download"></i> Installer l'application</button>
+        </nav>
 
         <header class="top-bar">
-            <div class="logo-box" onclick="showPage('home')">
-                <img src="logo.svg" alt="TS1" class="logo-img">
-                <span
-                    style="font-weight: 700; font-size: 1.1rem; letter-spacing: -0.5px;">TECH-STONE
-                    ONE</span>
-            </div>
+            <a class="logo-box" href="#home" aria-label="Tech-Stone One, accueil">
+                <img src="logo.svg" alt="" class="logo-img" width="45" height="45">
+                <span style="font-weight: 700; font-size: 1.1rem; letter-spacing: -0.5px;">TECH-STONE ONE</span>
+            </a>
 
-            <div class="desktop-nav">
-                <!-- NOUVELLE FONCTIONNALITÉ TECH : Badge de Statut Système Dynamique -->
-                <div class="system-status"
-                    title="Tous les services TS1 sont opérationnels">
-                    <div class="status-dot"></div>
-                    <span id="system-latency">TS1 Core : 14ms</span>
+            <nav class="desktop-nav" aria-label="Navigation">
+                <div class="system-status" id="system-status" title="Vérification du site en cours…">
+                    <div class="status-dot" id="status-dot"></div>
+                    <span id="system-latency" role="status">TS1 Core : …</span>
                 </div>
 
-                <a onclick="showPage('home')" class="active" id="d-home">Hub</a>
-                <a onclick="showPage('news')" id="d-news">Actualités</a>
-                <a onclick="showPage('agenda')" id="d-agenda">Agenda</a>
-                <a onclick="showPage('team')" id="d-team">Équipe</a>
-                <a onclick="showPage('projects')" id="d-projects">Projets</a>
-                <a onclick="showPage('manual')" id="d-manual">Manuel</a>
-                <a onclick="showPage('contact')" id="d-contact">Contact</a>
-            </div>
-            <div class="hamburger" onclick="toggleSidebar()"><i
-                    class="fas fa-bars-staggered"></i></div>
+                <a href="#home" class="active" id="d-home">Hub</a>
+                <a href="#news" id="d-news">Actualités</a>
+                <a href="#agenda" id="d-agenda">Agenda</a>
+                <a href="#team" id="d-team">Équipe</a>
+                <a href="#projects" id="d-projects">Projets</a>
+                <a href="#manual" id="d-manual">Manuel</a>
+                <a href="#contact" id="d-contact">Contact</a>
+                <a href="academy.html">Academy</a>
+                <a href="membre.html">Espace membre</a>
+                <button type="button" class="install-btn" hidden><i class="fas fa-download"></i> Installer</button>
+            </nav>
+            <button type="button" class="hamburger" id="hamburger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="sidebar"><i class="fas fa-bars-staggered"></i></button>
         </header>
 
-        <main class="main-container">
+        <main class="main-container" id="main">
 
             <section id="page-home" class="page active">
                 <div class="hero">
-                    <!-- IMAGE DE LA HERO REMPLACÉE PAR UN VISUEL HIGH-TECH ABSTRAIT & FUTURISTE -->
-                    <img
-                        src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200"
-                        class="hero-img" alt="Technologie Avancée TS1">
+                    <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200"
+                        class="hero-img" alt="Circuits électroniques et technologie avancée" referrerpolicy="no-referrer">
                     <div class="hero-content">
                         <h1>Bienvenue chez Tech-Stone One</h1>
                         <p>"L'innovation n'est pas seulement ce que nous créons, c'est l'avenir que nous construisons ensemble."</p>
@@ -189,82 +215,55 @@
 
                 <div class="section-header"><h2>Nos Services Experts</h2></div>
                 <div class="grid">
-                    <div class="card"><i
-                            class="fas fa-laptop-code service-icon"></i><h3>Dév.
-                            Web & Apps</h3><p
-                            style="color:var(--text-dim); font-size:0.9rem;">Solutions
-                            cloud et interfaces haute performance.</p></div>
-                    <div class="card"><i
-                            class="fas fa-id-badge service-icon"></i><h3>Print &
-                            Badges NFC</h3><p
-                            style="color:var(--text-dim); font-size:0.9rem;">Identité
-                            visuelle et sécurité d'accès moderne.</p></div>
-                    <div class="card"><i
-                            class="fas fa-microchip service-icon"></i><h3>Maint.
-                            Électronique</h3><p
-                            style="color:var(--text-dim); font-size:0.9rem;">Diagnostic
-                            et informatique embarquée spécialisée.</p></div>
+                    <div class="card"><i class="fas fa-laptop-code service-icon" aria-hidden="true"></i><h3>Dév. Web & Apps</h3><p class="muted">Solutions cloud et interfaces haute performance.</p></div>
+                    <div class="card"><i class="fas fa-id-badge service-icon" aria-hidden="true"></i><h3>Print & Badges NFC</h3><p class="muted">Identité visuelle et sécurité d'accès moderne.</p></div>
+                    <div class="card"><i class="fas fa-microchip service-icon" aria-hidden="true"></i><h3>Maint. Électronique</h3><p class="muted">Diagnostic et informatique embarquée spécialisée.</p></div>
                 </div>
 
                 <div class="section-header"><h2>Événements à la Une</h2></div>
                 <div class="grid">
                     <div class="card event-card">
                         <span class="badge-live">BIENTÔT</span>
-                        <img src="projets/EduSearch.png" class="event-img">
+                        <img src="projets/EduSearch.png" class="event-img" alt="Projet EduSearch" loading="lazy">
                         <h4>EduSearch</h4>
-                        <p
-                            style="color:var(--text-dim); font-size:0.85rem;">Présentation
-                            de notre projet éducatif dans des établissements
-                            scolaires.</p>
+                        <p class="muted-sm">Présentation de notre projet éducatif dans des établissements scolaires.</p>
                     </div>
                     <div class="card event-card">
-                        <img
-                            src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=500"
-                            class="event-img">
+                        <img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=500"
+                            class="event-img" alt="Atelier de codage JavaScript" loading="lazy" referrerpolicy="no-referrer">
                         <h4>Atelier Codage JS</h4>
-                        <p
-                            style="color:var(--text-dim); font-size:0.85rem;">Session
-                            interne sur les Service Workers et les PWA.</p>
+                        <p class="muted-sm">Session interne sur les Service Workers et les PWA.</p>
                     </div>
                 </div>
 
-                <!-- recrutement bouton-->
-                <div class="call-card"
-                    style="background: linear-gradient(135deg, #25D366, #128C7E);">
-                    <img src="Tech-StoneOne.png" alt="image d'un candidat"
+                <div class="call-card recruit">
+                    <img src="Tech-StoneOne.png" alt="Logo Tech-Stone One"
                         style="width:90px; height:90px; border-radius:50%; border:3px solid white; margin-bottom:15px;">
-                    <a href="https://ts1-candidature.netlify.app"
-                        class="btn-teams" target="_blank"
-                        style="background:#25D366; margin-bottom: 50px; color:#fff;">
-                        <i class="fas fa-user-plus"></i> Déposer votre
-                        candidature
-                    </a>
+                    <div>
+                        <a href="https://ts1-candidature.netlify.app" class="btn-teams green" target="_blank" rel="noopener noreferrer">
+                            <i class="fas fa-user-plus"></i> Déposer votre candidature
+                        </a>
+                    </div>
                 </div>
                 <div class="call-card">
-                    <i class="fas fa-video"
-                        style="font-size: 2.5rem; margin-bottom: 15px;"></i>
-                    <h2>Communication Interne</h2>
-                    <p>Réunion rapide avec l'équipe ? Lancez l'appel
-                        maintenant.</p>
-                    <a href="https://meet.google.com/hyj-bmzk-gzh"
-                        class="btn-teams" target="_blank">
-                        <i class="fab fa-google"></i> Rejoindre Google Meet
+                    <i class="fas fa-users-gear" style="font-size: 2.5rem; margin-bottom: 15px;" aria-hidden="true"></i>
+                    <h2>Espace Membre</h2>
+                    <p>Réunions d'équipe, manuel interne et formations : l'accès est réservé aux membres connectés.</p>
+                    <a href="membre.html" class="btn-teams">
+                        <i class="fas fa-lock"></i> Accéder à l'espace membre
                     </a>
                 </div>
             </section>
 
             <section id="page-news" class="page">
-                <div class="section-header"><h2>Actualités
-                        Technologiques</h2></div>
+                <div class="section-header"><h2>Actualités Technologiques</h2></div>
                 <div class="grid" id="google-news-container">
                     <div class="card">
-                        <img
-                            src="https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?w=500"
-                            class="news-img">
+                        <img src="https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?w=500"
+                            class="news-img" alt="Intelligence artificielle générative" loading="lazy" referrerpolicy="no-referrer">
                         <span class="news-source">Google Cloud</span>
                         <h4>Mise à jour Gemini AI</h4>
-                        <p style="color:var(--text-dim); font-size:0.85rem;">Les
-                            dernières avancées en IA générative.</p>
+                        <p class="muted-sm">Les dernières avancées en IA générative.</p>
                     </div>
                 </div>
 
@@ -274,140 +273,66 @@
 
             <section id="page-agenda" class="page">
                 <div class="section-header"><h2>Calendrier & Agenda</h2></div>
-                <div class="card">
-                    <div class="agenda-item">
-                        <div class="agenda-date"><span
-                                style="font-size:1.2rem; font-weight:700;">18</span><span>AVR</span></div>
-                        <div>
-                            <h4 style="color:var(--accent);">Réunion Stratégique
-                                TS1</h4>
-                            <p
-                                style="font-size:0.85rem; color:var(--text-dim);">Déploiement
-                                des terminaux NFC.</p>
-                        </div>
-                    </div>
-                    <div class="agenda-item">
-                        <div class="agenda-date"><span
-                                style="font-size:1.2rem; font-weight:700;">22</span><span>AVR</span></div>
-                        <div>
-                            <h4 style="color:var(--accent);">Audit de
-                                Sécurité</h4>
-                            <p
-                                style="font-size:0.85rem; color:var(--text-dim);">Revue
-                                des protocoles du manuel opérationnel.</p>
-                        </div>
-                    </div>
-                    <div class="agenda-item">
-                        <div class="agenda-date"><span
-                                style="font-size:1.2rem; font-weight:700;">30</span><span>AVR</span></div>
-                        <div>
-                            <h4 style="color:var(--accent);">Lancement Beta
-                                "FilmsAll"</h4>
-                            <p
-                                style="font-size:0.85rem; color:var(--text-dim);">Phase
-                                de test public de la plateforme.</p>
-                        </div>
-                    </div>
-                </div>
+                <div class="card" id="agenda-container"></div>
             </section>
 
             <section id="page-team" class="page">
                 <div class="section-header"><h2>Notre Équipe</h2></div>
-                <div class="filter-team">
-                    <button class="filter-btn active"
-                        onclick="filterTeam('all')">Tous</button>
-                    <button class="filter-btn" onclick="filterTeam('web')">Web
-                        Dev</button>
-                    <button class="filter-btn"
-                        onclick="filterTeam('design')">Design</button>
-                    <button class="filter-btn"
-                        onclick="filterTeam('elec')">Électronique</button>
+                <div class="filter-team" role="group" aria-label="Filtrer l'équipe">
+                    <button type="button" class="filter-btn active" data-filter="all">Tous</button>
+                    <button type="button" class="filter-btn" data-filter="web">Web Dev</button>
+                    <button type="button" class="filter-btn" data-filter="design">Design</button>
+                    <button type="button" class="filter-btn" data-filter="elec">Électronique</button>
+                    <button type="button" class="filter-btn" data-filter="market">Marketing</button>
                 </div>
+                <p class="team-empty" id="team-empty" role="status" hidden>Aucun membre dans cette catégorie pour le moment.</p>
                 <div class="grid" id="team-list">
                     <div class="card member-card" data-role="web">
-                        <img src="image/PDG.jpeg" class="member-photo"
-                            alt="PDG">
-                        <h3>Ngoy wa banza pierre (CEO)</h3>
-                        <p
-                            style="color:var(--accent); font-weight:600;">Développeur
-                            Web</p>
-                        <div
-                            class="dream-text">"Innover pour faire avancer la technologie dans notre pays."</div>
+                        <img src="image/PDG.jpeg" class="member-photo" alt="Ngoy Wa Banza Pierre" width="85" height="85" loading="lazy">
+                        <h3>Ngoy Wa Banza Pierre (CEO)</h3>
+                        <p class="role">Développeur Web</p>
+                        <div class="dream-text">"Innover pour faire avancer la technologie dans notre pays."</div>
                         <div class="social-links">
-                            <a href="https://github.com/PIERRESTONE260"
-                                target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a
-                                href="https://www.linkedin.com/in/pierre-ngoy-wa-banza-7b5b8b1b2/"
-                                target="_blank"><i
-                                    class="fas fa-briefcase"></i></a>
+                            <a href="https://github.com/PIERRESTONE260" target="_blank" rel="noopener noreferrer" aria-label="GitHub de Pierre"><i class="fab fa-github"></i></a>
+                            <a href="https://www.linkedin.com/in/pierre-ngoy-wa-banza-7b5b8b1b2/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn de Pierre"><i class="fas fa-briefcase"></i></a>
                         </div>
-                        <a href="https://pierrestone.netlify.app"
-                            class="btn-portfolio" target="_blank">Voir le
-                            Portfolio</a>
+                        <a href="https://pierrestone.netlify.app" class="btn-portfolio" target="_blank" rel="noopener noreferrer">Voir le Portfolio</a>
                     </div>
-                    <!-- Wanzire -->
                     <div class="card member-card" data-role="elec">
-                        <img src="image/wanzire.jpeg" class="member-photo"
-                            alt="Wanzire">
+                        <img src="image/wanzire.jpeg" class="member-photo" alt="Wanzire Guy-Arthur" width="85" height="85" loading="lazy">
                         <h3>Wanzire Guy-Arthur (DG)</h3>
-                        <p
-                            style="color:var(--accent); font-weight:600;">Technicien
-                            Embarqué</p>
-                        <div
-                            class="dream-text">"Faire avancer la technologie dans notre pays."</div>
+                        <p class="role">Technicien Embarqué</p>
+                        <div class="dream-text">"Faire avancer la technologie dans notre pays."</div>
                         <div class="social-links">
-                            <a href="https://github.com/24wv439si-Wanz/"
-                                target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="#" target="_blank"><i
-                                    class="fas fa-briefcase"></i></a>
+                            <a href="https://github.com/24wv439si-Wanz/" target="_blank" rel="noopener noreferrer" aria-label="GitHub de Wanzire"><i class="fab fa-github"></i></a>
+                            <a class="is-disabled" aria-disabled="true" tabindex="-1" title="Bientôt disponible" aria-label="LinkedIn de Wanzire (bientôt disponible)"><i class="fas fa-briefcase"></i></a>
                         </div>
-                        <a href="#" class="btn-portfolio" target="_blank">Voir
-                            le Portfolio</a>
+                        <a class="btn-portfolio is-disabled" aria-disabled="true" tabindex="-1" title="Bientôt disponible">Portfolio bientôt disponible</a>
                     </div>
-                    <!-- Ben -->
                     <div class="card member-card" data-role="market">
-                        <img src="image/DM..jpeg" class="member-photo"
-                            alt="ben">
+                        <img src="image/DM..jpeg" class="member-photo" alt="Kahasha Elie" width="85" height="85" loading="lazy">
                         <h3>Kahasha Elie (DM)</h3>
-                        <p
-                            style="color:var(--accent); font-weight:600;">Directeur
-                            Marketing</p>
-                        <div
-                            class="dream-text">"Passionné par la conception, l'innovation et la recherche de solutions durables."</div>
+                        <p class="role">Directeur Marketing</p>
+                        <div class="dream-text">"Passionné par la conception, l'innovation et la recherche de solutions durables."</div>
                         <div class="social-links">
-                            <a href="#" target="_blank"><i
-                                    class="fab fa-github"></i></a>
-                            <a href="#" target="_blank"><i
-                                    class="fas fa-briefcase"></i></a>
+                            <a class="is-disabled" aria-disabled="true" tabindex="-1" title="Bientôt disponible" aria-label="GitHub de Kahasha (bientôt disponible)"><i class="fab fa-github"></i></a>
+                            <a class="is-disabled" aria-disabled="true" tabindex="-1" title="Bientôt disponible" aria-label="LinkedIn de Kahasha (bientôt disponible)"><i class="fas fa-briefcase"></i></a>
                         </div>
-                        <a href="#" class="btn-portfolio" target="_blank">Voir
-                            le Portfolio</a>
+                        <a class="btn-portfolio is-disabled" aria-disabled="true" tabindex="-1" title="Bientôt disponible">Portfolio bientôt disponible</a>
                     </div>
                 </div>
             </section>
 
             <section id="page-projects" class="page">
                 <div class="section-header"><h2>Réalisations</h2></div>
-                <div class="grid">
+                <div class="grid" id="projects-grid">
                     <div class="card">
-                        <img src="projets/filmsall.png"
-                            style="width:100%; border-radius:12px; margin-bottom:15px;"
-                            alt="FilmsAll">
+                        <img src="projets/filmsall.png" style="width:100%; border-radius:12px; margin-bottom:15px;" alt="Capture de la plateforme FilmsAll" loading="lazy">
                         <h3>FilmsAll</h3>
-                        <p
-                            style="color:var(--text-dim); font-size:0.85rem;">Streaming
-                            pour le cinéma africain.</p>
+                        <p class="muted-sm">Streaming pour le cinéma africain.</p>
                         <div class="project-actions">
-                            <a href="https://filmsall.netlify.app"
-                                class="btn-mini"><i
-                                    class="fas fa-external-link-alt"></i>
-                                Live</a>
-                            <a
-                                href="https://github.com/PIERRESTONE260/filmsall.git"
-                                style="color:var(--text-dim);"><i
-                                    class="fab fa-github"></i> Source</a>
+                            <a href="https://filmsall.netlify.app" class="btn-mini" target="_blank" rel="noopener noreferrer"><i class="fas fa-external-link-alt"></i> Live</a>
+                            <a href="https://github.com/PIERRESTONE260/filmsall.git" style="color:var(--text-dim);" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> Source</a>
                         </div>
                     </div>
                 </div>
@@ -415,61 +340,38 @@
 
             <section id="page-manual" class="page">
                 <div class="section-header"><h2>Manuel Opérationnel Interne</h2></div>
-                <div class="manual-secure" oncontextmenu="return false;">
-                    <div class="watermark">CONFIDENTIEL TS1</div>
-                    
-                    <div style="text-align: center; margin-bottom: 30px;">
-                        <span style="background: rgba(0, 132, 255, 0.1); color: var(--accent); padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase;">Édition Standard • v2.6</span>
-                        <h2 style="color: #0f172a; margin-top: 10px; font-size: 1.8rem;">Guide des Protocoles Tech-Stone One</h2>
-                        <p style="color: #64748b; font-size: 0.9rem;">Document à usage exclusif des membres accrédités de l'organisation.</p>
-                    </div>
-
-                    <div style="display: grid; gap: 25px; color: #334155;">
-                        <div style="background: #f8fafc; padding: 20px; border-radius: 12px; border-left: 4px solid #0084ff;">
-                            <h4 style="color: #0f172a; margin-bottom: 8px;"><i class="fas fa-shield-alt" style="color: #0084ff; margin-right: 8px;"></i> I. Validation 'Stone-Prime'</h4>
-                            <p style="font-size: 0.92rem; line-height: 1.5;">Tout déploiement de code en production, mise en ligne d'application ou modification majeure d'infrastructure requiert l'aval technique du pôle directionnel (Validation Stone-Prime). Aucun commit direct sur la branche principale sans revue préalable.</p>
-                        </div>
-
-                        <div style="background: #f8fafc; padding: 20px; border-radius: 12px; border-left: 4px solid #00bcf2;">
-                            <h4 style="color: #0f172a; margin-bottom: 8px;"><i class="fas fa-code-branch" style="color: #00bcf2; margin-right: 8px;"></i> II. Standards de Développement PWA</h4>
-                            <p style="font-size: 0.92rem; line-height: 1.5;">Les applications développées sous la bannière TS1 doivent impérativement respecter les standards Progressive Web App (PWA) : support hors-ligne via Service Workers, design responsive mobile-first, et optimisation des temps de chargement sous la barre des 1.5 secondes.</p>
-                        </div>
-
-                        <div style="background: #f8fafc; padding: 20px; border-radius: 12px; border-left: 4px solid #25D366;">
-                            <h4 style="color: #0f172a; margin-bottom: 8px;"><i class="fas fa-network-wired" style="color: #25D366; margin-right: 8px;"></i> III. Sécurité des Données & Matériel</h4>
-                            <p style="font-size: 0.92rem; line-height: 1.5;">L'utilisation de bases de données locales sécurisées est privilégiée pour garantir la confidentialité des dossiers internes. Les clés d'API, identifiants Netlify et accès aux terminaux NFC ne doivent jamais être partagés sur des canaux publics.</p>
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 35px; padding-top: 20px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                        <span style="font-size: 0.8rem; color: #64748b;">Propriété intellectuelle • Tech-Stone One © 2026</span>
-                        <span style="color:#d9534f; font-weight:700; font-size: 0.85rem;"><i class="fas fa-exclamation-triangle"></i> [ Diffusion strictement interdite ]</span>
-                    </div>
+                <div class="card lock-card">
+                    <i class="fas fa-lock service-icon" aria-hidden="true"></i>
+                    <h3>Accès réservé aux membres</h3>
+                    <p class="muted">Le manuel opérationnel de Tech-Stone One est un document confidentiel. Il est disponible uniquement dans l'espace membre, après connexion.</p>
+                    <a href="membre.html" class="btn-portfolio">Se connecter à l'espace membre</a>
                 </div>
             </section>
 
             <section id="page-contact" class="page">
                 <div class="section-header"><h2>Contact & Devis</h2></div>
                 <div class="card">
-                    <form id="requestForm">
-                        <input type="text" id="c_name"
-                            placeholder="Nom ou Entreprise" required>
+                    <form id="requestForm" novalidate>
+                        <label class="sr-only" for="c_name">Nom ou entreprise</label>
+                        <input type="text" id="c_name" placeholder="Nom ou Entreprise" maxlength="100" autocomplete="name" required>
+                        <label class="sr-only" for="c_contact">E-mail ou téléphone (facultatif)</label>
+                        <input type="text" id="c_contact" placeholder="E-mail ou téléphone (facultatif)" maxlength="150" autocomplete="off">
+                        <label class="sr-only" for="c_service">Service souhaité</label>
                         <select id="c_service">
                             <option value="web">Développement Web</option>
                             <option value="design">Design & Print</option>
                             <option value="repair">Maintenance IoT</option>
                         </select>
-                        <textarea id="c_msg" rows="5"
-                            placeholder="Détails du projet..."
-                            required></textarea>
+                        <label class="sr-only" for="c_msg">Détails du projet</label>
+                        <textarea id="c_msg" rows="5" placeholder="Détails du projet..." maxlength="1500" required></textarea>
+                        <div class="hp-field" aria-hidden="true">
+                            <label for="c_site">Ne pas remplir</label>
+                            <input type="text" id="c_site" name="c_site" tabindex="-1" autocomplete="off">
+                        </div>
+                        <p class="form-note" id="form-note" role="status"></p>
                         <div class="contact-row">
-                            <button type="button" class="btn-wa"
-                                onclick="sendReq('wa')"><i
-                                    class="fab fa-whatsapp"></i>
-                                WhatsApp</button>
-                            <button type="button" class="btn-mail"
-                                onclick="sendReq('mail')"><i
-                                    class="fas fa-envelope"></i> Email</button>
+                            <button type="button" class="btn-wa" id="btn-wa"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                            <button type="submit" class="btn-mail"><i class="fas fa-envelope"></i> Email</button>
                         </div>
                     </form>
                 </div>
@@ -477,84 +379,13 @@
 
         </main>
 
-        <script>
-        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
-
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.desktop-nav a').forEach(a => a.classList.remove('active'));
-            
-            document.getElementById('page-' + pageId).classList.add('active');
-            const dLink = document.getElementById('d-' + pageId);
-            if(dLink) dLink.classList.add('active');
-            
-            document.getElementById('sidebar').classList.remove('open');
-            window.scrollTo(0, 0);
-
-            if(pageId === 'news') loadInternalNews();
-        }
-
-        function loadInternalNews() {
-            const container = document.getElementById('internal-news-container');
-            const data = [
-                { "title": "Succès FilmsAll", "desc": "Déploiement sur Netlify OK.", "img": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400" },
-                { "title": "FilmsAll v2", "desc": "Sécurité renforcée.", "img": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=400" }
-            ];
-            container.innerHTML = data.map(n => `
-                <div class="card">
-                    <img src="${n.img}" class="news-img">
-                    <span class="news-source">TS NEWS</span>
-                    <h4>${n.title}</h4>
-                    <p style="color:var(--text-dim); font-size:0.85rem;">${n.desc}</p>
-                </div>
-            `).join('');
-        }
-
-        function filterTeam(role) {
-            const members = document.querySelectorAll('.member-card');
-            const btns = document.querySelectorAll('.filter-btn');
-            btns.forEach(b => b.classList.remove('active'));
-            if(event) event.target.classList.add('active');
-            members.forEach(m => {
-                if(role === 'all' || m.getAttribute('data-role') === role) m.style.display = 'block';
-                else m.style.display = 'none';
-            });
-        }
-
-        function sendReq(type) {
-            const name = document.getElementById('c_name').value;
-            const service = document.getElementById('c_service').value;
-            const msg = document.getElementById('c_msg').value;
-            if(!name || !msg) return alert("Remplissez les champs.");
-            const fullText = `Tech-Stone One : ${name} | ${service}. Projet : ${msg}`;
-            if(type === 'wa') window.open(`https://wa.me/243856178369?text=${encodeURIComponent(fullText)}`);
-            else window.location.href = `mailto:techstoneone@gmail.com?subject=Demande ${service}&body=${fullText}`;
-        }
-
-        // Simulateur dynamique de latence / performance système (Fonctionnalité Tech Simple)
-        setInterval(() => {
-            const latency = Math.floor(Math.random() * (18 - 11 + 1)) + 11;
-            const latencyEl = document.getElementById('system-latency');
-            if(latencyEl) latencyEl.textContent = `TS1 Core : ${latency}ms`;
-        }, 4000);
-
-        // Sécurité contre la copie
-        document.addEventListener('keydown', e => {
-            if (e.ctrlKey && (e.key === 'c' || e.key === 's' || e.key === 'u')) {
-                e.preventDefault();
-            }
-        });
-        
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').catch(err => console.log(err));
-        }
-    </script>
-
         <footer>
-            <div
-                style="text-align:center; padding:20px; color:var(--text-dim); font-size:0.9rem; border-top:1px solid var(--border);">
+            <div style="text-align:center; padding:20px; color:var(--text-dim); font-size:0.9rem; border-top:1px solid var(--border);">
                 &copy; 2026 Tech-Stone One. | Propulsé par l'innovation.
             </div>
         </footer>
+
+        <script src="config.js"></script>
+        <script src="index.js"></script>
     </body>
 </html>

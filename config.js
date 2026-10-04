@@ -1,0 +1,4 @@
+window.TS1_CONFIG = {
+    SUPABASE_URL: 'https://bulmpqfxwcqhzsiggduu.supabase.co',
+    SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1bG1wcWZ4d2NxaHpzaWdnZHV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA5ODIzOTksImV4cCI6MjEwNjU1ODM5OX0.Gvux1eTPe5MUX8H6Y1jP65MnCC6yFHQ9HmPkhnoWOEo'
+};

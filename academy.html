@@ -4,10 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TS1 Academy | Tech-Stone One</title>
+    <meta name="description" content="TS1 Academy : l'espace de formation continue de Tech-Stone One.">
+    <meta name="theme-color" content="#060b13">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="TS1 Academy | Tech-Stone One">
+    <meta property="og:description" content="L'espace de formation continue de Tech-Stone One.">
+    <meta property="og:image" content="Tech-StoneOne.png">
+
+    <link rel="manifest" href="manifest.json">
     <link rel="shortcut icon" href="logo.svg" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-title" content="TS1">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="ts1-ui.css">
+
     <style>
         :root {
             --bg: #05080f;
@@ -16,42 +31,58 @@
             --border: rgba(255, 255, 255, 0.1);
             --text-main: #ffffff;
             --text-dim: #94a3b8;
-            --live-red: #ff4b2b;
+            --live-red: #c81e1e;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             background-color: var(--bg);
             background-image: radial-gradient(circle at 50% 50%, #0a192f 0%, #05080f 100%);
+            background-attachment: fixed;
             color: var(--text-main);
             line-height: 1.6;
             overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
+        a, button { font-family: inherit; }
+        :focus-visible { outline: 3px solid #66e3ff; outline-offset: 2px; }
+        [hidden] { display: none !important; }
+        .skip-link { position: absolute; left: -999px; top: 10px; background: var(--accent); color: #05080f; padding: 10px 16px; border-radius: 8px; z-index: 3000; text-decoration: none; font-weight: 700; }
+        .skip-link:focus { left: 10px; }
 
         .header {
             padding: 20px 5%;
             display: flex; justify-content: space-between; align-items: center;
             border-bottom: 1px solid var(--border);
             backdrop-filter: blur(10px);
-            position: sticky; top: 0; z-index: 1000; background: rgba(5, 8, 15, 0.8);
+            position: sticky; top: 0; z-index: 1000; background: rgba(5, 8, 15, 0.85);
+            gap: 15px; flex-wrap: wrap;
         }
-
         .logo-box { display: flex; align-items: center; gap: 15px; text-decoration: none; color: white; }
         .logo-box img { width: 40px; height: 40px; }
+        .nav { display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
+        .nav a { text-decoration: none; font-size: 0.9rem; color: white; }
+        .nav a.accent { color: var(--accent); }
+        .nav a:hover { text-decoration: underline; }
+        .nav .link-out { background: none; border: none; color: white; font-size: 0.9rem; cursor: pointer; padding: 0; }
+        .nav .link-out:hover { text-decoration: underline; }
 
         .hero-academy { text-align: center; padding: 60px 20px; }
-        .hero-academy h1 { font-family: 'Space Grotesk'; font-size: 3rem; margin-bottom: 10px; }
+        .hero-academy h1 { font-family: 'Space Grotesk', 'Inter', sans-serif; font-size: clamp(2rem, 6vw, 3rem); margin-bottom: 10px; }
         .hero-academy p { color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px 100px; }
+        main { flex: 1; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px 100px; width: 100%; }
+        #gate .auth-wrap { min-height: 0; padding: 0 0 40px; }
 
-        /* --- SECTION LIVE MEETING --- */
         .live-card {
             background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 68, 255, 0.1));
             border: 2px solid var(--accent);
             border-radius: 25px; padding: 40px; text-align: center;
-            margin-bottom: 60px; position: relative; overflow: hidden;
+            margin-bottom: 60px;
         }
         .live-status {
             display: inline-flex; align-items: center; gap: 10px;
@@ -59,7 +90,9 @@
             border-radius: 20px; font-size: 0.8rem; font-weight: 800;
             margin-bottom: 20px; animation: pulse 2s infinite;
         }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+        .live-card h2 { margin-bottom: 15px; font-size: 1.6rem; }
+        .live-card p { color: var(--text-dim); margin: 0 auto 30px; max-width: 600px; }
 
         .btn-join {
             background: var(--accent); color: #05080f; border: none;
@@ -69,47 +102,52 @@
         }
         .btn-join:hover { transform: scale(1.05); box-shadow: 0 0 30px var(--accent); }
 
-        /* --- GRID VIDÉOTHÈQUE --- */
-        .section-title { font-family: 'Space Grotesk'; font-size: 2rem; margin-bottom: 30px; border-left: 5px solid var(--accent); padding-left: 20px; }
-        .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
-        
-        .video-card {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 20px; overflow: hidden; transition: 0.3s;
-        }
+        .section-title { font-family: 'Space Grotesk', 'Inter', sans-serif; font-size: 2rem; margin-bottom: 30px; border-left: 5px solid var(--accent); padding-left: 20px; }
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 25px; }
+
+        .video-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; transition: 0.3s; }
         .video-card:hover { border-color: var(--accent); transform: translateY(-5px); }
-        
-        .video-thumb {
-            width: 100%; height: 180px; background: #1a1e2e;
-            display: flex; align-items: center; justify-content: center;
-            position: relative;
-        }
+        .video-thumb { width: 100%; height: 180px; background: linear-gradient(135deg, #12203a, #0a1222); display: flex; align-items: center; justify-content: center; position: relative; }
         .video-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
-        .play-overlay { position: absolute; font-size: 3rem; color: var(--accent); opacity: 0.8; }
-
+        .play-overlay { position: absolute; font-size: 3rem; color: var(--accent); opacity: 0.85; }
         .video-info { padding: 20px; }
-        .video-info h4 { margin-bottom: 10px; font-size: 1.1rem; }
+        .video-info h3 { margin: 8px 0; font-size: 1.1rem; }
+        .video-meta { color: var(--text-dim); font-size: 0.8rem; }
         .video-tag { background: rgba(255,255,255,0.1); padding: 3px 10px; border-radius: 5px; font-size: 0.7rem; color: var(--accent); }
+        .video-link { color: var(--accent); font-size: 0.85rem; text-decoration: none; display: inline-block; margin-top: 15px; }
+        .video-link:hover { text-decoration: underline; }
 
-        /* --- PERFORMANCE TRACKER --- */
-        .performance-panel {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;
-            margin-top: 50px;
-        }
+        .empty-state { text-align: center; color: var(--text-dim); padding: 50px 20px; border: 1px dashed var(--border); border-radius: 20px; }
+        .empty-state i { font-size: 2rem; color: var(--accent); opacity: 0.6; display: block; margin-bottom: 12px; }
+        .empty-state.error { color: #ffb4b4; border-color: rgba(255, 138, 138, 0.4); }
+
+        .performance-panel { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); gap: 20px; margin-top: 50px; }
         .perf-card { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 15px; text-align: center; border: 1px solid var(--border); }
-        .perf-card span { font-size: 2rem; font-weight: 800; color: var(--accent); display: block; }
+        .perf-card .value { font-size: 2rem; font-weight: 800; color: var(--accent); display: block; }
+        .perf-card .label { font-size: 0.8rem; color: var(--text-dim); }
+
+        footer { text-align: center; padding: 30px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 0.8rem; }
+
+        @media (max-width: 600px) { .live-card { padding: 28px 18px; } .btn-join { padding: 16px 26px; width: 100%; justify-content: center; } }
+        @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
     </style>
 </head>
 <body>
 
+    <a href="#main" class="skip-link" id="skip-link">Aller au contenu</a>
+
     <header class="header">
-        <a href="index.html" class="logo-box">
-            <img src="logo.svg" alt="Logo">
+        <a href="index.html" class="logo-box" aria-label="Tech-Stone One, retour au hub">
+            <img src="logo.svg" alt="" width="40" height="40">
             <span style="font-weight: 700;">TECH-STONE ONE</span>
         </a>
-        <nav style="display: flex; gap: 20px;">
-            <a href="index.html" style="color: white; text-decoration: none; font-size: 0.9rem;">Hub Principal</a>
-            <a href="https://ts1-candidature.netlify.app" style="color: var(--accent); text-decoration: none; font-size: 0.9rem;">Recrutement</a>
+        <nav class="nav" aria-label="Navigation">
+            <a href="index.html">Hub Principal</a>
+            <a href="https://ts1-candidature.netlify.app" class="accent" target="_blank" rel="noopener noreferrer">Recrutement</a>
+            <span id="nav-auth" class="nav" hidden>
+                <a href="membre.html">Espace membre</a>
+                <button type="button" class="link-out" id="btn-logout">Déconnexion</button>
+            </span>
         </nav>
     </header>
 
@@ -118,90 +156,177 @@
         <h1>TS1 Academy</h1>
     </section>
 
-    <div class="container">
-        
-        <!-- ZONE LIVE : LIEN GOOGLE MEET -->
-        <div class="live-card">
-            <div class="live-status"><i class="fas fa-circle"></i> FORMATION EN DIRECT</div>
-            <h2 style="margin-bottom: 15px;">Session de Programmation Avancée</h2>
-            <p style="color: var(--text-dim); margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">
-                Rejoignez le PDG pour la session hebdomadaire sur l'optimisation des architectures Web et l'informatique embarquée.
-            </p>
-            <!-- REMPLACEZ LE LIEN CI-DESSOUS PAR MON LIEN GOOGLE MEET -->
-            <a href="https://meet.google.com/amy-zcqj-ren" target="_blank" class="btn-join">
-                <i class="fas fa-video"></i> REJOINDRE LA FORMATION
-            </a>
-        </div>
+    <main class="container" id="main">
 
-        <!-- ZONE REPLAY : ARCHIVES DES VIDÉOS -->
-        <h2 class="section-title">Archives des Formations</h2>
-        <div class="video-grid">
-            
-            <!-- Vidéo 1 -->
-            <div class="video-card">
-                <div class="video-thumb">
-                    <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600" alt="Cours 1">
-                    <i class="fas fa-play-circle play-overlay"></i>
-                </div>
-                <div class="video-info">
-                    <span class="video-tag">Web Development</span>
-                    <h4>Maîtriser JavaScript Moderne (ES6+)</h4>
-                    <p style="color: var(--text-dim); font-size: 0.8rem;">Enregistré le 12 Mars 2025 • 45 min</p>
-                    <a href="#" style="color: var(--accent); font-size: 0.8rem; text-decoration: none; display: block; margin-top: 15px;">Visionner le Replay →</a>
-                </div>
-            </div>
+        <div id="gate"></div>
 
-            <!-- Vidéo 2 -->
-            <div class="video-card">
-                <div class="video-thumb">
-                    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600" alt="Cours 2">
-                    <i class="fas fa-play-circle play-overlay"></i>
-                </div>
-                <div class="video-info">
-                    <span class="video-tag">IoT & Électronique</span>
-                    <h4>Introduction à l'Informatique Embarquée</h4>
-                    <p style="color: var(--text-dim); font-size: 0.8rem;">Enregistré le 05 Mars 2025 • 1h 10min</p>
-                    <a href="#" style="color: var(--accent); font-size: 0.8rem; text-decoration: none; display: block; margin-top: 15px;">Visionner le Replay →</a>
-                </div>
-            </div>
+        <div id="academy" hidden>
 
-            <!-- Vidéo 3 -->
-            <div class="video-card">
-                <div class="video-thumb">
-                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600" alt="Cours 3">
-                    <i class="fas fa-play-circle play-overlay"></i>
+            <section class="live-card" id="live-section" aria-labelledby="live-title" hidden>
+                <div class="live-status"><i class="fas fa-circle" aria-hidden="true"></i> FORMATION EN DIRECT</div>
+                <h2 id="live-title"></h2>
+                <p id="live-desc" hidden></p>
+                <a id="live-link" href="#" target="_blank" rel="noopener noreferrer" class="btn-join">
+                    <i class="fas fa-video" aria-hidden="true"></i> REJOINDRE LA FORMATION
+                </a>
+            </section>
+
+            <section aria-labelledby="archives-title">
+                <h2 class="section-title" id="archives-title">Archives des Formations</h2>
+                <div class="video-grid" id="video-grid"></div>
+                <div class="empty-state" id="video-empty" hidden>
+                    <i class="fas fa-video-slash" aria-hidden="true"></i>
+                    Aucune formation archivée pour le moment.
                 </div>
-                <div class="video-info">
-                    <span class="video-tag">Structure</span>
-                    <h4>Gestion des bases de données JSON</h4>
-                    <p style="color: var(--text-dim); font-size: 0.8rem;">Enregistré le 20 Février 2025 • 38 min</p>
-                    <a href="#" style="color: var(--accent); font-size: 0.8rem; text-decoration: none; display: block; margin-top: 15px;">Visionner le Replay →</a>
+                <div class="empty-state error" id="load-error" role="alert" hidden>
+                    <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
+                    Impossible de charger les formations pour le moment. Réessayez dans un instant.
                 </div>
-            </div>
+            </section>
+
+            <section class="performance-panel" id="stats-panel" aria-label="Statistiques de formation" hidden></section>
 
         </div>
 
-        <!-- TRACKER DE PERFORMANCE ÉQUIPE -->
-        <div class="performance-panel">
-            <div class="perf-card">
-                <span>12</span>
-                <p style="font-size: 0.8rem; color: var(--text-dim);">Heures de formation</p>
-            </div>
-            <div class="perf-card">
-                <span>100%</span>
-                <p style="font-size: 0.8rem; color: var(--text-dim);">Assiduité équipe</p>
-            </div>
-            <div class="perf-card">
-                <span>+5</span>
-                <p style="font-size: 0.8rem; color: var(--text-dim);">Nouvelles Skills</p>
-            </div>
-        </div>
+    </main>
 
-    </div>
-
-    <footer style="text-align:center; padding:30px; border-top:1px solid var(--border); color: var(--text-dim); font-size: 0.8rem;">
+    <footer>
         &copy; 2026 Tech-Stone One Academy | L'excellence par la connaissance.
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="ts1-core.js"></script>
+    <script>
+    (function () {
+        'use strict';
+
+        function esc(value) {
+            return String(value == null ? '' : value).replace(/[&<>"']/g, function (c) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+            });
+        }
+
+        function formatDate(iso) {
+            var d = new Date(String(iso).slice(0, 10) + 'T00:00:00');
+            if (isNaN(d)) return '';
+            return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+        }
+
+        function renderLive(live) {
+            var section = document.getElementById('live-section');
+            var url = live && live.active ? TS1.safeHttps(live.url) : '';
+            if (!live || !live.title || !url) { section.hidden = true; return; }
+
+            document.getElementById('live-title').textContent = live.title;
+            var desc = document.getElementById('live-desc');
+            if (live.description) { desc.textContent = live.description; desc.hidden = false; }
+            else { desc.hidden = true; }
+            document.getElementById('live-link').href = url;
+            section.hidden = false;
+        }
+
+        function renderVideos(videos) {
+            var grid = document.getElementById('video-grid');
+            var empty = document.getElementById('video-empty');
+            var list = Array.isArray(videos) ? videos.filter(function (v) { return v && v.title; }) : [];
+
+            if (!list.length) { grid.innerHTML = ''; empty.hidden = false; return; }
+            empty.hidden = true;
+
+            grid.innerHTML = list.map(function (v) {
+                var thumb = TS1.safeImage(v.thumb_url);
+                var link = TS1.safeHttps(v.video_url);
+                var meta = [];
+                if (v.recorded_on) { var f = formatDate(v.recorded_on); if (f) meta.push('Enregistré le ' + f); }
+                if (v.duration) meta.push(v.duration);
+
+                return '<article class="video-card">' +
+                    '<div class="video-thumb">' +
+                        (thumb ? '<img src="' + esc(thumb) + '" alt="" loading="lazy" referrerpolicy="no-referrer">' : '') +
+                        '<i class="fas fa-play-circle play-overlay" aria-hidden="true"></i>' +
+                    '</div>' +
+                    '<div class="video-info">' +
+                        (v.tag ? '<span class="video-tag">' + esc(v.tag) + '</span>' : '') +
+                        '<h3>' + esc(v.title) + '</h3>' +
+                        (meta.length ? '<p class="video-meta">' + esc(meta.join(' • ')) + '</p>' : '') +
+                        (link ? '<a class="video-link" href="' + esc(link) + '" target="_blank" rel="noopener noreferrer">Visionner le Replay →</a>' : '') +
+                    '</div></article>';
+            }).join('');
+        }
+
+        function renderStats(stats) {
+            var panel = document.getElementById('stats-panel');
+            var list = Array.isArray(stats) ? stats.filter(function (s) { return s && s.label && s.value !== undefined && s.value !== null && s.value !== ''; }) : [];
+            if (!list.length) { panel.hidden = true; panel.innerHTML = ''; return; }
+
+            panel.innerHTML = list.map(function (s) {
+                return '<div class="perf-card"><span class="value">' + esc(s.value) + '</span><p class="label">' + esc(s.label) + '</p></div>';
+            }).join('');
+            panel.hidden = false;
+        }
+
+        function loadAll(sb) {
+            return Promise.all([
+                sb.from('academy_live').select('*').eq('id', 1).maybeSingle(),
+                sb.from('academy_videos').select('*').order('recorded_on', { ascending: false }),
+                sb.from('academy_stats').select('*').order('position')
+            ]).then(function (r) {
+                var err = r[0].error || r[1].error || r[2].error;
+                if (err) throw err;
+                return { live: r[0].data, videos: r[1].data || [], stats: r[2].data || [] };
+            });
+        }
+
+        function start() {
+            var sb = TS1.sb;
+            var loadError = document.getElementById('load-error');
+
+            document.getElementById('gate').hidden = true;
+            document.getElementById('academy').hidden = false;
+            document.getElementById('nav-auth').hidden = false;
+            document.getElementById('btn-logout').addEventListener('click', function () { TS1.signOut(); });
+            TS1.idleLogout(60);
+
+            loadAll(sb)
+                .then(function (data) {
+                    loadError.hidden = true;
+                    renderLive(data.live);
+                    renderVideos(data.videos);
+                    renderStats(data.stats);
+                })
+                .catch(function () {
+                    document.getElementById('video-empty').hidden = true;
+                    loadError.hidden = false;
+                });
+
+            setInterval(function () {
+                if (document.hidden) return;
+                sb.from('academy_live').select('*').eq('id', 1).maybeSingle()
+                    .then(function (r) { if (!r.error) renderLive(r.data); });
+            }, 60000);
+        }
+
+        document.getElementById('skip-link').addEventListener('click', function (e) {
+            e.preventDefault();
+            var main = document.getElementById('main');
+            main.setAttribute('tabindex', '-1');
+            main.focus();
+        });
+
+        TS1.authGate({
+            root: document.getElementById('gate'),
+            title: 'TS1 Academy',
+            subtitle: 'Les formations en direct et les replays sont réservés aux membres. Connectez-vous avec votre compte Tech-Stone One.',
+            roles: ['membre', 'direction'],
+            denyMessage: 'Votre compte n\'a pas accès à TS1 Academy.',
+            onReady: start
+        });
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(function (err) { console.log(err); });
+        }
+    })();
+    </script>
 </body>
 </html>
