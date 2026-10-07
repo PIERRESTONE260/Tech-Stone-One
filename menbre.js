@@ -3,7 +3,13 @@
 
     const { el, fmtDate, toast } = TS1;
     const app = document.getElementById('app');
-    const POLES = { web: 'Web Dev', design: 'Design', elec: 'Électronique', market: 'Marketing' };
+    const POLES = { 
+        web: 'Web Dev', 
+        design: 'Design', 
+        elec: 'Électronique & IoT', 
+        market: 'Marketing',
+        academy: 'Academy & Leadership'
+    };
 
     function section(title, content) {
         return el('section', {}, el('h2', { class: 'section-title', text: title }), content);
@@ -16,7 +22,7 @@
         const url = TS1.safeHttps(live.url);
         if (!url || !live.title) return null;
         return el('section', { class: 'live', 'aria-label': 'Formation en direct' },
-            el('span', { class: 'tag', text: 'FORMATION EN DIRECT' }),
+            el('span', { class: 'tag', text: 'FORMATION EN DIRECT • CODE, IoT & LEADERSHIP' }),
             el('h2', { text: live.title }),
             live.description ? el('p', { class: 'dim', text: live.description }) : null,
             el('a', { class: 'btn primary', href: url, target: '_blank', rel: 'noopener noreferrer', text: 'Rejoindre la formation' }));
@@ -34,7 +40,7 @@
         const wm = Array(16).fill('CONFIDENTIEL TS1 · ' + user.email + '        CONFIDENTIEL TS1 · ' + user.email).join('\n');
         return el('div', { class: 'paper', 'data-wm': wm },
             sections.map(s => el('div', { class: 'rule' }, el('h3', { text: s.title }), el('p', { text: s.body }))),
-            el('p', { style: 'font-size:.8rem;color:#64748b;position:relative;z-index:1', text: 'Document à usage exclusif des membres de Tech-Stone One. Diffusion strictement interdite.' }));
+            el('p', { style: 'font-size:.8rem;color:#64748b;position:relative;z-index:1', text: 'Document à usage exclusif des membres et leaders de Tech-Stone One. Diffusion interdite.' }));
     }
 
     function videosView(videos) {
@@ -63,13 +69,13 @@
         const sb = TS1.sb;
 
         const tools = el('div', { class: 'tools' },
-            profile.role === 'direction' ? el('a', { class: 'btn primary sm', href: 'admin.html', text: 'Contrôle' }) : null,
-            el('a', { class: 'btn ghost sm', href: 'index.html', text: 'Site' }),
+            profile.role === 'direction' ? el('a', { class: 'btn primary sm', href: 'Admin.html', text: 'Contrôle (Admin)' }) : null,
+            el('a', { class: 'btn ghost sm', href: 'index.html', text: 'Site public' }),
             el('button', { type: 'button', class: 'btn ghost sm', text: 'Mot de passe', onclick: () => TS1.openPasswordDialog() }),
             el('button', { type: 'button', class: 'btn ghost sm', text: 'Déconnexion', onclick: () => TS1.signOut() }));
 
         const header = el('header', { class: 'top' },
-            el('div', { class: 'brand' }, el('img', { src: 'logo.svg', alt: '', width: '34', height: '34' }), el('strong', { text: 'TS1 · Espace membre' })),
+            el('div', { class: 'brand' }, el('img', { src: 'logo.svg', alt: '', width: '34', height: '34' }), el('strong', { text: 'TS1 · Espace membre & collaboratif' })),
             tools);
 
         const content = el('main', { class: 'wrap', id: 'main' }, el('p', { class: 'dim', text: 'Chargement…' }));
@@ -79,7 +85,7 @@
             sb.from('academy_live').select('*').eq('id', 1).maybeSingle(),
             sb.from('internal_links').select('*').order('position'),
             sb.from('manual_sections').select('*').order('position'),
-            sb.from('academy_videos').select('*').order('recorded_on', { ascending: false }),
+            sb.from('academy_videos').select('*').eq('published', true).order('recorded_on', { ascending: false }),
             sb.from('academy_stats').select('*').order('position')
         ]);
 
@@ -89,14 +95,14 @@
             el('h1', { text: 'Bonjour ' + (profile.full_name || user.email) }),
             profile.title ? el('span', { class: 'badge info', text: profile.title }) : null,
             profile.pole ? el('span', { class: 'badge', text: POLES[profile.pole] || profile.pole }) : null,
-            el('span', { class: 'badge ' + (profile.role === 'direction' ? 'ok' : ''), text: profile.role === 'direction' ? 'Direction' : 'Membre' }));
+            el('span', { class: 'badge ' + (profile.role === 'direction' ? 'ok' : ''), text: profile.role === 'direction' ? 'Direction & Leadership' : 'Membre' }));
 
         content.replaceChildren(
             hello,
             liveView(live.data),
-            section('Liens internes', linksView(links.data || [])),
-            section('Manuel opérationnel interne', manualView(manual.data || [], user)),
-            section('TS1 Academy · Replays', videosView(videos.data || [])),
+            section('Liens de réunion & collaboration', linksView(links.data || [])),
+            section('Manuel opérationnel, IoT & Leadership', manualView(manual.data || [], user)),
+            section('TS1 Academy • Replays & Formations (Code, IoT, Design)', videosView(videos.data || [])),
             statsView(stats.data || []));
     }
 

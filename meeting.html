@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salle de Réunion Live | Tech-Stone One</title>
+    <meta name="description" content="Salle de réunion virtuelle et collaborative pour les équipes de Tech-Stone One.">
+    <meta name="theme-color" content="#060b13">
+    <link rel="shortcut icon" href="logo.svg" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="ts1-ui.css">
+    <style>
+        .meeting-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .meeting-hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .meeting-hero h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+        .meeting-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        .official-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .meeting-box p {
+            color: var(--text-dim);
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .actions-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .btn-meet {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: #10b981;
+            color: white;
+            padding: 16px 32px;
+            border-radius: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+            width: 100%;
+            max-width: 400px;
+            justify-content: center;
+        }
+        .btn-meet:hover {
+            transform: scale(1.02);
+            background: #059669;
+        }
+        .btn-whatsapp {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: #25D366;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2);
+            width: 100%;
+            max-width: 400px;
+            justify-content: center;
+        }
+        .btn-whatsapp:hover {
+            transform: scale(1.02);
+            background: #22bf5b;
+        }
+        .nav-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-dim);
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        .nav-back:hover {
+            color: var(--text);
+        }
+        .admin-controls {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            display: none; /* Affiché uniquement pour l'e-mail officiel */
+        }
+    </style>
+</head>
+<body>
+
+    <main class="meeting-container">
+        <a href="membre.html" class="nav-back"><i class="fas fa-arrow-left"></i> Retour à l'espace membre</a>
+        
+        <div class="meeting-hero">
+            <h1>Salle de Réunion Virtuelle</h1>
+            <p class="dim">Espace de visioconférence et de collaboration en temps réel pour la direction et les équipes de Tech-Stone One.</p>
+        </div>
+
+        <div class="meeting-box">
+            <div class="official-badge">
+                <i class="fas fa-shield-halved"></i> Canal Officiel : techstoneone@gmail.com
+            </div>
+            
+            <i class="fas fa-video" style="font-size: 3.5rem; color: #10b981; margin-bottom: 20px;" aria-hidden="true"></i>
+            <h2>Session Live Active</h2>
+            <p>Rejoignez la réunion officielle de l'entreprise. Cette session est pilotée par la direction de Tech-Stone One.</p>
+            
+            <div class="actions-group">
+                <a href="https://meet.google.com/hyj-bmzk-gzh" class="btn-meet" target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-arrow-up-right-from-square"></i> Rejoindre Google Meet (Officiel)
+                </a>
+
+                <!-- Bouton de diffusion WhatsApp visible pour notifier l'équipe -->
+                <a href="#" id="whatsapp-broadcast" class="btn-whatsapp" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> Diffuser l'alerte sur WhatsApp (Équipe)
+                </a>
+            </div>
+
+            <!-- Panneau réservé au CEO / E-mail de l'entreprise -->
+            <div id="ceo-panel" class="admin-controls">
+                <p style="font-size: 0.9rem; color: #10b981; margin-bottom: 10px;">
+                    <i class="fas fa-circle-check"></i> Connecté en tant qu'Administrateur / CEO (techstoneone@gmail.com)
+                </p>
+                <span style="font-size: 0.85rem; color: var(--text-dim);">Vous avez les droits de pilotage prioritaires sur cette session live.</span>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="ts1-core.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+            // Configuration du message de diffusion WhatsApp pré-rempli
+            const meetUrl = "https://meet.google.com/hyj-bmzk-gzh";
+            const whatsappText = encodeURIComponent("🚨 *RÉUNION OFFICIELLE TECH-STONE ONE* \n\nLe CEO vient de lancer un meeting live prioritaire. Veuillez vous connecter immédiatement via le lien officiel :\n" + meetUrl);
+            const waBtn = document.getElementById("whatsapp-broadcast");
+            if (waBtn) {
+                waBtn.href = `https://api.whatsapp.com/send?text=${whatsappText}`;
+            }
+
+            // Vérification de l'authentification et de l'e-mail officiel via Supabase
+            if (TS1.configured && TS1.sb) {
+                const { data: { session } } = await TS1.sb.auth.getSession();
+                if (session && session.user) {
+                    const userEmail = session.user.email;
+                    const ceoPanel = document.getElementById("ceo-panel");
+
+                    // Si c'est l'e-mail officiel de l'entreprise ou la direction
+                    if (userEmail === "techstoneone@gmail.com") {
+                        if (ceoPanel) ceoPanel.style.display = "block";
+                    }
+                }
+            }
+
+            // Récupération dynamique optionnelle d'un lien personnalisé depuis la base de données
+            if (TS1.configured && TS1.sb) {
+                const res = await TS1.sb.from('internal_links').select('url').ilike('label', '%Google Meet%').limit(1).maybeSingle();
+                if (res.data && res.data.url) {
+                    const btn = document.querySelector('.btn-meet');
+                    if (btn) btn.href = res.data.url;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -4,68 +4,217 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tech-Stone One - Espace Membre & Collaboratif</title>
+    <link rel="icon" type="image/x-icon" href="logo.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --primary: #00f2fe; --secondary: #4facfe; --dark: #0f172a; --card-bg: #1e293b; --text: #f8fafc; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background: var(--dark); color: var(--text); padding: 30px; }
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; }
-        header h1 { color: var(--primary); font-size: 1.5rem; }
+        
+        /* Styles de connexion */
+        #auth-container { max-width: 400px; margin: 80px auto; background: var(--card-bg); padding: 30px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        #auth-container h2 { color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-size: 1.3rem; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: #94a3b8; }
+        .form-group input { width: 100%; padding: 10px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: white; }
+        .error-msg { color: #ef4444; font-size: 0.85rem; margin-top: 10px; display: none; }
+
+        /* Dashboard principal */
+        #dashboard-container { display: none; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+        header h1 { color: var(--primary); font-size: 1.5rem; display: flex; align-items: center; gap: 10px; }
+        .header-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
         .btn-meeting { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+        .btn-academy { background: linear-gradient(135deg, #0084ff, #0044cc); color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+        .btn-logout { background: #ef4444; color: white; padding: 8px 15px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; }
+        
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
         .card { background: var(--card-bg); border-radius: 12px; padding: 25px; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3); }
-        h3 { margin-bottom: 15px; color: var(--secondary); display: flex; align-items: center; gap: 10px; }
+        h3 { margin-bottom: 15px; color: var(--secondary); display: flex; align-items: center; gap: 10px; font-size: 1.1rem; }
         ul { list-style: none; }
         li { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        textarea { width: 100%; padding: 10px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: white; margin-bottom: 10px; }
-        button { background: var(--primary); color: var(--dark); border: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        textarea, input[type="text"] { width: 100%; padding: 10px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: white; margin-bottom: 10px; }
+        button { background: var(--primary); color: var(--dark); border: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        button:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
-    <header>
-        <h1><i class="fa-solid fa-code"></i> Espace Collaboratif — Tech-Stone One</h1>
-        <a href="meeting.html" class="btn-meeting" target="_blank"><i class="fa-solid fa-video"></i> Rejoindre la Salle de Réunion Live</a>
-    </header>
 
-    <div class="grid">
-        <div class="card">
-            <h3><i class="fa-solid fa-list-check"></i> Projets & Tâches en Cours</h3>
-            <div id="user-projects"></div>
-            <div style="margin-top: 15px;">
-                <input type="text" id="new-task" placeholder="Ajouter une note ou tâche rapide..." style="width:100%; padding:8px; background:#0f172a; border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:white; margin-bottom:8px;">
-                <button onclick="addTask()">Ajouter</button>
+    <!-- SECTION CONNEXION -->
+    <div id="auth-container">
+        <h2><i class="fa-solid fa-lock"></i> Espace Membre - Connexion</h2>
+        <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px;">Entrez vos identifiants fournis par l'administration pour accéder à l'espace de travail.</p>
+        <div class="form-group">
+            <label>Identifiant (ID ou Nom)</label>
+            <input type="text" id="member-id" placeholder="Ex: pierre.ngoy">
+        </div>
+        <div class="form-group">
+            <label>Mot de passe</label>
+            <input type="password" id="member-pass" placeholder="••••••••">
+        </div>
+        <button onclick="loginMember()" style="width: 100%; padding: 12px;">Se connecter</button>
+        <div id="auth-error" class="error-msg">Identifiant ou mot de passe incorrect.</div>
+    </div>
+
+    <!-- DASHBOARD COLLABORATIF -->
+    <div id="dashboard-container">
+        <header>
+            <h1><i class="fa-solid fa-code"></i> Espace Collaboratif — Tech-Stone One</h1>
+            <div class="header-actions">
+                <span id="welcome-user" style="font-weight: bold; color: var(--secondary);"></span>
+                <a href="academy.html" class="btn-academy"><i class="fa-solid fa-graduation-cap"></i> TS1 Academy</a>
+                <a href="meeting.html" class="btn-meeting" target="_blank"><i class="fa-solid fa-video"></i> Réunion Live</a>
+                <button class="btn-logout" onclick="logoutMember()"><i class="fa-solid fa-right-from-bracket"></i></button>
             </div>
-        </div>
+        </header>
 
-        <div class="card">
-            <h3><i class="fa-solid fa-bullhorn"></i> Actualités de l'Entreprise</h3>
-            <div id="user-news">Chargement...</div>
-        </div>
+        <div class="grid">
+            <!-- Dépôt de Rapports (Remplace WhatsApp) -->
+            <div class="card">
+                <h3><i class="fa-solid fa-file-arrow-up"></i> Dépôt de Rapport de Travail</h3>
+                <input type="text" id="report-title" placeholder="Sujet / Titre du rapport...">
+                <textarea id="report-content" rows="4" placeholder="Détaillez votre travail, vos avancées ou vos blocages..."></textarea>
+                <button onclick="submitReport()"><i class="fa-solid fa-paper-plane"></i> Envoyer le rapport</button>
+                <div id="my-reports-list" style="margin-top: 15px; max-height: 150px; overflow-y: auto;"></div>
+            </div>
 
-        <div class="card">
-            <h3><i class="fa-solid fa-book-open"></i> Manuel Interne & Directives</h3>
-            <p id="user-manual" style="white-space: pre-line; color:#94a3b8; font-size: 0.95rem;"></p>
+            <!-- Projets & Tâches -->
+            <div class="card">
+                <h3><i class="fa-solid fa-list-check"></i> Projets & Tâches en Cours</h3>
+                <div id="user-projects"></div>
+                <div style="margin-top: 15px;">
+                    <input type="text" id="new-task" placeholder="Ajouter une tâche rapide...">
+                    <button onclick="addTask()">Ajouter</button>
+                </div>
+            </div>
+
+            <!-- Actualités de l'Entreprise -->
+            <div class="card">
+                <h3><i class="fa-solid fa-bullhorn"></i> Actualités de l'Entreprise</h3>
+                <div id="user-news">Chargement...</div>
+            </div>
+
+            <!-- Manuel Interne -->
+            <div class="card">
+                <h3><i class="fa-solid fa-book-open"></i> Manuel Interne & Leadership</h3>
+                <p id="user-manual" style="white-space: pre-line; color:#94a3b8; font-size: 0.95rem;"></p>
+            </div>
         </div>
     </div>
 
     <script>
+        // Vérifier si un membre est déjà connecté au chargement
+        window.onload = function() {
+            const activeMember = sessionStorage.getItem('ts1_active_member');
+            if (activeMember) {
+                showDashboard(activeMember);
+            }
+        };
+
+        function loginMember() {
+            const inputId = document.getElementById('member-id').value.trim();
+            const inputPass = document.getElementById('member-pass').value.trim();
+            
+            // Récupération des données admin (où sont stockés les membres) ou fallback par défaut
+            const adminData = JSON.parse(localStorage.getItem('ts1_admin_data_v1')) || {};
+            const registeredMembers = adminData.members || [
+                { id: "admin", pass: "admin123", name: "Administrateur Principal" },
+                { id: "pierre", pass: "tech2026", name: "Pierre Ngoy" }
+            ];
+
+            const found = registeredMembers.find(m => (m.id === inputId || m.name.toLowerCase() === inputId.toLowerCase()) && m.pass === inputPass);
+
+            if (found || (inputId === "ts1" && inputPass === "admin")) { // Compte secours
+                const memberName = found ? found.name : inputId;
+                sessionStorage.setItem('ts1_active_member', memberName);
+                showDashboard(memberName);
+            } else {
+                document.getElementById('auth-error').style.display = 'block';
+            }
+        }
+
+        function showDashboard(name) {
+            document.getElementById('auth-container').style.display = 'none';
+            document.getElementById('dashboard-container').style.display = 'block';
+            document.getElementById('welcome-user').innerText = `👤 ${name}`;
+            loadDashboard();
+        }
+
+        function logoutMember() {
+            sessionStorage.removeItem('ts1_active_member');
+            document.getElementById('dashboard-container').style.display = 'none';
+            document.getElementById('auth-container').style.display = 'block';
+            document.getElementById('member-id').value = '';
+            document.getElementById('member-pass').value = '';
+            document.getElementById('auth-error').style.display = 'none';
+        }
+
         function loadDashboard() {
             // Actualités
             const news = JSON.parse(localStorage.getItem('ts_news')) || [];
             document.getElementById('user-news').innerHTML = news.map(n => `<p style="margin-bottom:10px;"><strong>${n.title}</strong><br><small style="color:#94a3b8">${n.content}</small></p>`).join('') || 'Aucune actualité récente.';
 
-            // Manuel
-            document.getElementById('user-manual').innerText = localStorage.getItem('ts_manual') || 'Aucune directive renseignée pour le moment.';
+            // Manuel & Directives
+            document.getElementById('user-manual').innerText = localStorage.getItem('ts_manual') || 'Directives actives : Apprentissage dynamique axé sur la programmation, l\'IoT, le design et le leadership.';
 
             // Tâches
             const tasks = JSON.parse(localStorage.getItem('ts_tasks')) || [];
             document.getElementById('user-projects').innerHTML = tasks.map((t, index) => `<li style="display:flex; justify-content:space-between; align-items:center;">${t} <button onclick="deleteTask(${index})" style="background:#ef4444; color:white; padding:3px 8px; font-size:0.8rem;">×</button></li>`).join('') || '<p style="color:#64748b">Aucune tâche enregistrée.</p>';
+
+            // Affichage des rapports soumis par ce membre
+            loadReports();
+        }
+
+        function submitReport() {
+            const title = document.getElementById('report-title').value.trim();
+            const content = document.getElementById('report-content').value.trim();
+            const author = sessionStorage.getItem('ts1_active_member') || 'Membre';
+
+            if (!title || !content) {
+                alert('Veuillez remplir le titre et le contenu du rapport.');
+                return;
+            }
+
+            let reports = JSON.parse(localStorage.getItem('ts1_reports')) || [];
+            reports.unshift({
+                author: author,
+                title: title,
+                content: content,
+                date: new Date().toLocaleString()
+            });
+
+            localStorage.setItem('ts1_reports', JSON.stringify(reports));
+            
+            document.getElementById('report-title').value = '';
+            document.getElementById('report-content').value = '';
+            loadReports();
+            alert('Rapport transmis avec succès à l’administration !');
+        }
+
+        function loadReports() {
+            const reports = JSON.parse(localStorage.getItem('ts1_reports')) || [];
+            const author = sessionStorage.getItem('ts1_active_member');
+            // Filtrer pour afficher les rapports du membre connecté ou tout l'historique récent
+            const myReports = reports.filter(r => r.author === author);
+            
+            const container = document.getElementById('my-reports-list');
+            if (myReports.length === 0) {
+                container.innerHTML = '<small style="color:#64748b;">Aucun rapport envoyé pour le moment.</small>';
+                return;
+            }
+
+            container.innerHTML = myReports.map(r => `
+                <div style="background:#0f172a; padding:8px; border-radius:6px; margin-bottom:8px; font-size:0.85rem;">
+                    <strong>${r.title}</strong> <small style="color:#94a3b8;">(${r.date})</small><br>
+                    <span style="color:#cbd5e1;">${r.content}</span>
+                </div>
+            `).join('');
         }
 
         function addTask() {
             const val = document.getElementById('new-task').value;
             if(!val) return;
-            let tasks = JSON.parse(localStorage.getItem('ts_tasks')) || [];
+            let tasks = JSON.parse(localStorage.getItem('ts1_tasks')) || JSON.parse(localStorage.getItem('ts_tasks')) || [];
             tasks.push(val);
             localStorage.setItem('ts_tasks', JSON.stringify(tasks));
             document.getElementById('new-task').value = '';
@@ -78,8 +227,6 @@
             localStorage.setItem('ts_tasks', JSON.stringify(tasks));
             loadDashboard();
         }
-
-        loadDashboard();
     </script>
 </body>
 </html>

@@ -1,7 +1,6 @@
 -- ============================================================
 -- TS1 : schéma de base de données (Supabase / PostgreSQL)
--- À coller dans Supabase > SQL Editor > New query > Run
--- Exécuter UNE SEULE FOIS (les données de départ sont en bas)
+-- Mis à jour pour intégrer : Dév, Design, IoT, Formation & Leadership
 -- ============================================================
 
 create extension if not exists pgcrypto;
@@ -13,7 +12,7 @@ create table if not exists public.profiles (
   full_name text check (full_name is null or char_length(full_name) <= 100),
   title text check (title is null or char_length(title) <= 100),
   role text not null default 'membre' check (role in ('direction','membre')),
-  pole text check (pole in ('web','design','elec','market')),
+  pole text check (pole in ('web','design','elec','market','iot','academy')),
   active boolean not null default true,
   created_at timestamptz not null default now()
 );
@@ -49,7 +48,7 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
 
--- ---------- ACADEMY ----------
+-- ---------- ACADEMY (Formations & Leadership) ----------
 create table if not exists public.academy_live (
   id int primary key default 1 check (id = 1),
   active boolean not null default false,
@@ -62,7 +61,7 @@ create table if not exists public.academy_live (
 create table if not exists public.academy_videos (
   id uuid primary key default gen_random_uuid(),
   title text not null check (char_length(title) between 1 and 150),
-  tag text check (tag is null or char_length(tag) <= 50),
+  tag text check (tag is null or char_length(tag) <= 50), -- ex: 'Programmation', 'IoT', 'Leadership'
   recorded_on date,
   duration text check (duration is null or char_length(duration) <= 30),
   thumb_url text,
@@ -113,7 +112,7 @@ create table if not exists public.projects (
 create table if not exists public.client_requests (
   id uuid primary key default gen_random_uuid(),
   name text not null check (char_length(name) between 1 and 100),
-  service text not null check (service in ('web','design','repair')),
+  service text not null check (service in ('web','design','repair','iot','academy')),
   contact text check (contact is null or char_length(contact) <= 150),
   message text not null check (char_length(message) between 1 and 1500),
   status text not null default 'nouveau' check (status in ('nouveau','en_cours','traite','archive')),
@@ -125,7 +124,7 @@ create table if not exists public.applications (
   full_name text not null check (char_length(full_name) between 1 and 100),
   email text check (email is null or char_length(email) <= 150),
   phone text check (phone is null or char_length(phone) <= 40),
-  pole text check (pole in ('web','design','elec','market')),
+  pole text check (pole in ('web','design','elec','market','iot','academy')),
   message text check (message is null or char_length(message) <= 2000),
   status text not null default 'nouveau' check (status in ('nouveau','entretien','accepte','refuse')),
   created_at timestamptz not null default now()
@@ -205,13 +204,11 @@ grant select on public.agenda_events, public.news, public.projects to anon;
 grant insert on public.client_requests, public.applications to anon;
 grant select, insert, update, delete on all tables in schema public to authenticated;
 
--- profils : chacun voit le sien, la direction voit et modifie tout
 create policy profiles_select on public.profiles for select to authenticated
   using (id = auth.uid() or public.is_direction());
 create policy profiles_update on public.profiles for update to authenticated
   using (public.is_direction()) with check (public.is_direction());
 
--- academy et interne : lecture pour les membres, tout pour la direction
 create policy live_read on public.academy_live for select to authenticated using (public.is_member());
 create policy live_admin on public.academy_live for all to authenticated
   using (public.is_direction()) with check (public.is_direction());
@@ -234,7 +231,6 @@ create policy links_read on public.internal_links for select to authenticated us
 create policy links_admin on public.internal_links for all to authenticated
   using (public.is_direction()) with check (public.is_direction());
 
--- site public : lecture ouverte au contenu publié, écriture direction
 create policy agenda_read on public.agenda_events for select to anon, authenticated using (public);
 create policy agenda_admin on public.agenda_events for all to authenticated
   using (public.is_direction()) with check (public.is_direction());
@@ -247,7 +243,6 @@ create policy projects_read on public.projects for select to anon, authenticated
 create policy projects_admin on public.projects for all to authenticated
   using (public.is_direction()) with check (public.is_direction());
 
--- demandes et candidatures : tout le monde peut déposer, seule la direction lit
 create policy requests_insert on public.client_requests for insert to anon, authenticated
   with check (status = 'nouveau');
 create policy requests_admin on public.client_requests for all to authenticated
@@ -258,29 +253,25 @@ create policy applications_insert on public.applications for insert to anon, aut
 create policy applications_admin on public.applications for all to authenticated
   using (public.is_direction()) with check (public.is_direction());
 
--- journal : lecture direction uniquement (écriture par les déclencheurs)
 create policy audit_read on public.audit_log for select to authenticated using (public.is_direction());
 
--- ---------- DONNÉES DE DÉPART (reprises du site actuel) ----------
+-- ---------- DONNÉES DE DÉPART (Manuel enrichi avec le Leadership & Formation) ----------
 insert into public.academy_live (id) values (1) on conflict (id) do nothing;
 
 insert into public.manual_sections (position, title, body) values
 (1, 'I. Validation ''Stone-Prime''',
  'Tout déploiement de code en production, mise en ligne d''application ou modification majeure d''infrastructure requiert l''aval technique du pôle directionnel (Validation Stone-Prime). Aucun commit direct sur la branche principale sans revue préalable.'),
-(2, 'II. Standards de Développement PWA',
- 'Les applications développées sous la bannière TS1 doivent impérativement respecter les standards Progressive Web App (PWA) : support hors-ligne via Service Workers, design responsive mobile-first, et optimisation des temps de chargement sous la barre des 1.5 secondes.'),
-(3, 'III. Sécurité des Données & Matériel',
- 'L''utilisation de bases de données locales sécurisées est privilégiée pour garantir la confidentialité des dossiers internes. Les clés d''API, identifiants Netlify et accès aux terminaux NFC ne doivent jamais être partagés sur des canaux publics.');
+(2, 'II. Standards de Développement PWA & IoT',
+ 'Les applications et systèmes embarqués développés sous la bannière TS1 doivent impérativement respecter les standards de haute performance, de sécurité matérielle/logicielle et d''ergonomie mobile-first.'),
+(3, 'III. Culture du Leadership et Management d''Équipe',
+ 'Chez Tech-Stone One, chaque membre est encouragé à développer son leadership. Que l''on pilote une petite équipe agile ou une grande structure, les maîtres-mots sont la responsabilité, l''écoute active, la transparence et l''accompagnement des talents pour grandir ensemble.'),
+(4, 'IV. Sécurité des Données & Confidentialité',
+ 'L''utilisation de bases de données sécurisées est primordiale. Les clés d''API, identifiants et accès aux infrastructures ne doivent jamais être partagés sur des canaux non sécurisés.');
 
 insert into public.internal_links (position, label, url) values
-(1, 'Réunion d''équipe (Google Meet)', 'https://meet.google.com/hyj-bmzk-gzh'),
-(2, 'Session TS1 Academy (Google Meet)', 'https://meet.google.com/amy-zcqj-ren');
+(1, 'Réunion d''équipe & Stratégie (Google Meet)', 'https://meet.google.com/hyj-bmzk-gzh'),
+(2, 'Session TS1 Academy — Code & Leadership (Google Meet)', 'https://meet.google.com/amy-zcqj-ren');
 
 insert into public.projects (title, description, image_url, live_url, source_url) values
 ('FilmsAll', 'Streaming pour le cinéma africain.', 'projets/filmsall.png',
  'https://filmsall.netlify.app', 'https://github.com/PIERRESTONE260/filmsall.git');
-
--- ---------- PREMIER COMPTE DIRECTION ----------
--- 1) Créez votre compte dans Authentication > Users > Add user (cochez Auto Confirm)
--- 2) Décommentez, remplacez l'e-mail, puis exécutez uniquement cette ligne :
--- update public.profiles set role = 'direction' where email = 'VOTRE_EMAIL';

@@ -1,393 +1,634 @@
 (() => {
-  const styles = `
-    :root {
-      --bg: #060b13;
-      --panel: #0d1726;
-      --panel-2: #101d30;
-      --border: rgba(255,255,255,0.08);
-      --text: #edf4ff;
-      --dim: #9ab0c8;
-      --accent: #5aa3ff;
-      --accent-text: #dfeeff;
+  'use strict';
+
+  const { el, toast, fmtDate } = TS1;
+  const app = document.getElementById('app');
+
+  // --- SOURCE DE VÉRITÉ SYNCHRONISÉE AVEC LE SITE OFFICIEL ---
+  const STORAGE_KEY = 'ts1_admin_data_v1';
+
+  function getAppData() {
+    const defaultData = {
+      live: { 
+        active: true, 
+        title: 'Session Live Academy', 
+        description: 'Cours interactif en direct sur les architectures web.', 
+        url: 'https://meet.google.com/' 
+      },
+      videos: [
+        { id: 'v1', title: 'Maîtriser les Progressive Web Apps', tag: 'Code', recorded_on: '2026-06-01', video_url: '', description: 'Formation complète PWA' }
+      ],
+      expertises: [
+        { id: 'e1', title: 'Développement Web & Mobile', description: 'Création d\'applications sur-mesure et PWA.', icon: 'fa-code' },
+        { id: 'e2', title: 'Design & UI/UX', description: 'Conception de maquettes, logos et chartes graphiques.', icon: 'fa-pen-nib' }
+      ],
+      events: [
+        { id: 'ev1', title: 'Conférence UDBL Lubumbashi', badge: 'Présentiel', description: 'Séminaire sur le génie logiciel.' }
+      ],
+      news: [
+        { id: 'n1', title: 'Lancement de la plateforme TS-Translater', source: 'TS NEWS', description: 'Traduction pour les langues nationales de la RDC.' }
+      ],
+      projects: [
+        { id: 'p1', title: 'EduSearch AI', description: 'Moteur de recherche éducatif avec synthèse vocale.', live_url: '#', source_url: '#' },
+        { id: 'p2', title: 'DEV-DIC', description: 'Dictionnaire interactif pour développeurs.', live_url: '#', source_url: '#' }
+      ],
+      agenda: [
+        { id: 'a1', title: 'Soutenance de projet UDBL', starts_on: '2026-06-15', description: 'Présentation des prototypes smart campus.' }
+      ],
+      team: [
+        { id: 't1', full_name: 'Pierre Ngoy', email: 'CEO2705@gmail.com', role: 'Lead Developer', pole: 'Développement Web & PWA', motivation: 'Innover par le code en Afrique', github: 'https://github.com', portfolio: '#', active: true }
+      ],
+      manual: `# Manuel Interne & Leadership - Tech-Stone One\n\n## 1. Vision\nTech-Stone One a pour mission de révolutionner le développement logiciel en République Démocratique du Congo.\n\n## 2. Pôles & Organisation\n- Pôle Développement\n- Pôle Design\n- Pôle IoT & Électronique\n- Pôle Marketing`,
+      links: [
+        { label: 'Site Principal', url: 'index.html' },
+        { label: 'Dépôt GitHub', url: 'https://github.com' }
+      ]
+    };
+
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (!saved) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultData));
+      return defaultData;
+    }
+    try { return JSON.parse(saved); } catch (e) { return defaultData; }
+  }
+
+  function saveAppData(data) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    window.dispatchEvent(new Event('ts1_data_updated'));
+  }
+
+  async function adminView({ profile, user }) {
+    TS1.idleLogout(30);
+    let appData = getAppData();
+
+    const tabs = [
+      { id: 'live', label: '🔴 Direct Academy' },
+      { id: 'videos', label: '📺 Replays & Formations' },
+      { id: 'expertises', label: '⚙️ Domaines d\'Expertise' },
+      { id: 'events', label: '🌟 Événements à la Une' },
+      { id: 'news', label: '📰 Actualités & Infos' },
+      { id: 'projects', label: '🚀 Réalisations & Projets' },
+      { id: 'agenda', label: '📅 Agenda & Notifications' },
+      { id: 'team', label: '👥 Équipe & Rôles' },
+      { id: 'manual', label: '📖 Manuel Interne & Leadership' },
+      { id: 'links', label: '🔗 Liens Internes' }
+    ];
+
+    let currentTab = 'live';
+
+    const navBtns = tabs.map(t => {
+      const btn = el('button', { type: 'button', class: 'nav-btn', text: t.label, onclick: () => switchTab(t.id) });
+      if (t.id === currentTab) btn.classList.add('active');
+      btn.dataset.id = t.id;
+      return btn;
+    });
+
+    const sidebar = el('aside', { class: 'side' },
+      el('div', { class: 'brand' },
+        el('div', { class: 'brand-badge', text: 'T' }),
+        el('div', { class: 'brand-name', text: 'TS1 · Contrôle Total' })
+      ),
+      el('div', { class: 'nav-title', text: 'Pilotage du Site Principal' }),
+      el('nav', { class: 'side-nav' }, navBtns),
+      el('div', { class: 'side-foot' },
+        el('div', { class: 'nav-title', text: 'Session' }),
+        el('div', { class: 'who', text: user.email }),
+        el('a', { class: 'nav-btn', href: 'index.html', target: '_blank', text: '🌐 Voir le site public' }),
+        el('button', { type: 'button', class: 'nav-btn', text: 'Se déconnecter', onclick: () => TS1.signOut() })
+      )
+    );
+
+    const hamburgerBtn = el('button', { type: 'button', class: 'hamburger-btn', 'aria-label': 'Menu' },
+      el('i', { class: 'fa-solid fa-bars' })
+    );
+
+    hamburgerBtn.onclick = () => sidebar.classList.toggle('open');
+
+    navBtns.forEach(btn => {
+      const originalOnClick = btn.onclick;
+      btn.onclick = () => {
+        originalOnClick();
+        sidebar.classList.remove('open');
+      };
+    });
+
+    const mainContent = el('main', { class: 'content' });
+    const layout = el('div', { class: 'shell' }, hamburgerBtn, sidebar, mainContent);
+
+    app.replaceChildren(layout);
+
+    function switchTab(id) {
+      currentTab = id;
+      navBtns.forEach(b => b.classList.toggle('active', b.dataset.id === id));
+      loadTabData(id);
     }
 
-    * { box-sizing: border-box; }
-    html, body {
-      margin: 0;
-      padding: 0;
-      font-family: "Inter", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-    }
+    function loadTabData(id) {
+      appData = getAppData();
 
-    body {
-      min-height: 100vh;
-    }
+      // 1. DIRECT ACADEMY
+      if (id === 'live') {
+        const data = appData.live;
+        const activeChk = el('input', { type: 'checkbox', checked: data.active });
+        const titleIn = el('input', { type: 'text', value: data.title || '', maxlength: 150 });
+        const descIn = el('textarea', { rows: 3, maxlength: 500 }, data.description || '');
+        const urlIn = el('input', { type: 'url', value: data.url || '' });
+        const msg = el('p', { class: 'msg' });
 
-    .shell {
-      display: grid;
-      grid-template-columns: 250px 1fr;
-      min-height: 100vh;
-    }
+        const form = el('form', { class: 'stack panel' },
+          el('h2', { text: 'Gestion du Flux en Direct (Academy)' }),
+          el('p', { class: 'dim', text: 'Pilotez la session en direct affichée sur l\'espace académique.' }),
+          el('label', { class: 'check' }, activeChk, el('span', { text: 'Activer le direct sur le site' })),
+          TS1.field('Titre de la session', titleIn),
+          TS1.field('Description', descIn),
+          TS1.field('Lien de visioconférence (Meet, Zoom...)', urlIn),
+          msg,
+          el('button', { type: 'submit', class: 'btn primary', text: 'Enregistrer et synchroniser' })
+        );
 
-    .side {
-      background: var(--panel);
-      border-right: 1px solid var(--border);
-      padding: 20px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow-y: auto;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 0 6px;
-    }
-
-    .brand-badge {
-      width: 28px;
-      height: 28px;
-      display: grid;
-      place-items: center;
-      border-radius: 8px;
-      background: linear-gradient(135deg, #5aa3ff, #6ed6ff);
-      color: #08111d;
-      font-weight: 800;
-    }
-
-    .brand-name {
-      font-weight: 800;
-      letter-spacing: 0.04em;
-    }
-
-    .nav-title {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: var(--dim);
-      margin: 14px 8px 6px;
-    }
-
-    .nav-btn {
-      display: block;
-      width: 100%;
-      text-align: left;
-      background: none;
-      border: none;
-      color: var(--text);
-      padding: 9px 12px;
-      border-radius: 10px;
-      cursor: pointer;
-      font: inherit;
-      font-size: 0.92rem;
-    }
-
-    .nav-btn:hover {
-      background: rgba(255, 255, 255, 0.06);
-    }
-
-    .nav-btn.active {
-      background: #0b3a6e;
-      font-weight: 600;
-    }
-
-    .side-foot {
-      margin-top: auto;
-      display: grid;
-      gap: 8px;
-      padding: 6px;
-    }
-
-    .who {
-      font-weight: 700;
-      word-break: break-word;
-    }
-
-    .content {
-      padding: 30px clamp(16px, 4vw, 40px) 60px;
-      width: 100%;
-      max-width: 1150px;
-    }
-
-    .intro {
-      margin-bottom: 18px;
-      max-width: 760px;
-    }
-
-    .toolbar {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin: 16px 0;
-    }
-
-    .toolbar select {
-      width: auto;
-      min-width: 190px;
-    }
-
-    .table-wrap {
-      overflow-x: auto;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.9rem;
-    }
-
-    th, td {
-      text-align: left;
-      padding: 12px 14px;
-      border-bottom: 1px solid var(--border);
-      vertical-align: top;
-    }
-
-    th {
-      color: var(--dim);
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      background: rgba(255,255,255,0.03);
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
-    .actions {
-      display: flex;
-      gap: 8px;
-      white-space: nowrap;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 14px;
-      margin: 20px 0;
-    }
-
-    .stat {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 20px;
-      text-align: left;
-      color: var(--text);
-      cursor: pointer;
-      font: inherit;
-      display: grid;
-      gap: 4px;
-      transition: 0.2s;
-    }
-
-    .stat:hover {
-      border-color: var(--accent);
-      transform: translateY(-3px);
-    }
-
-    .stat-n {
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--accent-text);
-    }
-
-    .stat-l {
-      color: var(--dim);
-      font-size: 0.85rem;
-    }
-
-    .live-box {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 18px;
-      flex-wrap: wrap;
-    }
-
-    @media (max-width: 800px) {
-      .shell {
-        grid-template-columns: 1fr;
+        form.onsubmit = e => {
+          e.preventDefault();
+          appData.live = { active: activeChk.checked, title: titleIn.value.trim(), description: descIn.value.trim(), url: urlIn.value.trim() };
+          saveAppData(appData);
+          toast('Direct mis à jour sur le site en temps réel !', 'ok');
+        };
+        mainContent.replaceChildren(form);
       }
+      // 2. REPLAYS & FORMATIONS
+      else if (id === 'videos') {
+        const items = appData.videos;
+        const toolbar = el('div', { class: 'toolbar' },
+          el('h2', { text: 'Gestion des Replays & Formations' }),
+          el('button', { type: 'button', class: 'btn primary sm', text: '+ Publier une formation', onclick: () => openVideoModal() })
+        );
 
-      .side {
-        position: static;
-        height: auto;
+        const rows = items.map(v => el('tr', {},
+          el('td', { 'data-label': 'Titre', text: v.title }),
+          el('td', { 'data-label': 'Tag', text: v.tag || '-' }),
+          el('td', { 'data-label': 'Date', text: fmtDate(v.recorded_on) }),
+          el('td', { 'data-label': 'Source Vidéo', text: v.video_url ? (v.video_url.startsWith('data:') ? 'Fichier importé' : 'Lien externe') : 'Aucune' }),
+          el('td', { 'data-label': 'Actions', class: 'actions' },
+            el('button', { type: 'button', class: 'btn ghost sm', text: 'Modifier', onclick: () => openVideoModal(v) }),
+            el('button', { type: 'button', class: 'btn danger sm', text: 'Supprimer', onclick: () => deleteItem('videos', v.id, () => loadTabData('videos')) })
+          )
+        ));
+
+        const table = el('div', { class: 'table-wrap' },
+          el('table', {},
+            el('thead', {}, el('tr', {}, el('th', { text: 'Titre' }), el('th', { text: 'Tag' }), el('th', { text: 'Date' }), el('th', { text: 'Vidéo' }), el('th', { text: 'Actions' }))),
+            el('tbody', {}, rows.length ? rows : el('tr', {}, el('td', { colspan: '5', class: 'empty', text: 'Aucune formation disponible.' })))
+          )
+        );
+        mainContent.replaceChildren(toolbar, table);
       }
+      // 3. DOMAINES D'EXPERTISE
+      else if (id === 'expertises') {
+        const items = appData.expertises;
+        const toolbar = el('div', { class: 'toolbar' },
+          el('h2', { text: 'Gestion des Domaines d\'Expertise' }),
+          el('button', { type: 'button', class: 'btn primary sm', text: '+ Ajouter une expertise', onclick: () => openExpertiseModal() })
+        );
 
-      .side-nav {
-        display: flex;
-        gap: 6px;
-        overflow-x: auto;
-        padding-bottom: 6px;
+        const rows = items.map(item => el('tr', {},
+          el('td', { 'data-label': 'Titre', text: item.title }),
+          el('td', { 'data-label': 'Description', text: item.description || '-' }),
+          el('td', { 'data-label': 'Icône', text: item.icon || '-' }),
+          el('td', { 'data-label': 'Actions', class: 'actions' },
+            el('button', { type: 'button', class: 'btn ghost sm', text: 'Modifier', onclick: () => openExpertiseModal(item) }),
+            el('button', { type: 'button', class: 'btn danger sm', text: 'Supprimer', onclick: () => deleteItem('expertises', item.id, () => loadTabData('expertises')) })
+          )
+        ));
+
+        const table = el('div', { class: 'table-wrap' },
+          el('table', {},
+            el('thead', {}, el('tr', {}, el('th', { text: 'Titre' }), el('th', { text: 'Description' }), el('th', { text: 'Icône' }), el('th', { text: 'Actions' }))),
+            el('tbody', {}, rows.length ? rows : el('tr', {}, el('td', { colspan: '4', class: 'empty', text: 'Aucune expertise.' })))
+          )
+        );
+        mainContent.replaceChildren(toolbar, table);
       }
+      // 4. ÉVÉNEMENTS À LA UNE
+      else if (id === 'events') {
+        const items = appData.events;
+        const toolbar = el('div', { class: 'toolbar' },
+          el('h2', { text: 'Gestion des Événements à la Une' }),
+          el('button', { type: 'button', class: 'btn primary sm', text: '+ Ajouter un événement', onclick: () => openEventModal() })
+        );
 
-      .nav-title {
-        display: none;
+        const rows = items.map(ev => el('tr', {},
+          el('td', { 'data-label': 'Titre', text: ev.title }),
+          el('td', { 'data-label': 'Badge', text: ev.badge || '-' }),
+          el('td', { 'data-label': 'Description', text: ev.description || '-' }),
+          el('td', { 'data-label': 'Actions', class: 'actions' },
+            el('button', { type: 'button', class: 'btn ghost sm', text: 'Modifier', onclick: () => openEventModal(ev) }),
+            el('button', { type: 'button', class: 'btn danger sm', text: 'Supprimer', onclick: () => deleteItem('events', ev.id, () => loadTabData('events')) })
+          )
+        ));
+
+        const table = el('div', { class: 'table-wrap' },
+          el('table', {},
+            el('thead', {}, el('tr', {}, el('th', { text: 'Titre' }), el('th', { text: 'Badge' }), el('th', { text: 'Description' }), el('th', { text: 'Actions' }))),
+            el('tbody', {}, rows.length ? rows : el('tr', {}, el('td', { colspan: '4', class: 'empty', text: 'Aucun événement.' })))
+          )
+        );
+        mainContent.replaceChildren(toolbar, table);
       }
+      // 5. ACTUALITÉS & INFOS
+      else if (id === 'news') {
+        const items = appData.news;
+        const toolbar = el('div', { class: 'toolbar' },
+          el('h2', { text: 'Gestion des Actualités & Infos' }),
+          el('button', { type: 'button', class: 'btn primary sm', text: '+ Publier une actualité', onclick: () => openNewsModal() })
+        );
 
-      .nav-btn {
-        white-space: nowrap;
-        width: auto;
-        background: rgba(255,255,255,0.05);
+        const rows = items.map(n => el('tr', {},
+          el('td', { 'data-label': 'Titre', text: n.title }),
+          el('td', { 'data-label': 'Source', text: n.source || '-' }),
+          el('td', { 'data-label': 'Description', text: n.description || '-' }),
+          el('td', { 'data-label': 'Actions', class: 'actions' },
+            el('button', { type: 'button', class: 'btn ghost sm', text: 'Modifier', onclick: () => openNewsModal(n) }),
+            el('button', { type: 'button', class: 'btn danger sm', text: 'Supprimer', onclick: () => deleteItem('news', n.id, () => loadTabData('news')) })
+          )
+        ));
+
+        const table = el('div', { class: 'table-wrap' },
+          el('table', {},
+            el('thead', {}, el('tr', {}, el('th', { text: 'Titre' }), el('th', { text: 'Source' }), el('th', { text: 'Description' }), el('th', { text: 'Actions' }))),
+            el('tbody', {}, rows.length ? rows : el('tr', {}, el('td', { colspan: '4', class: 'empty', text: 'Aucune actualité.' })))
+          )
+        );
+        mainContent.replaceChildren(toolbar, table);
       }
+      // 6. RÉALISATIONS & PROJETS
+      else if (id === 'projects') {
+        const items = appData.projects;
+        const toolbar = el('div', { class: 'toolbar' },
+          el('h2', { text: 'Gestion des Réalisations & Projets' }),
+          el('button', { type: 'button', class: 'btn primary sm', text: '+ Ajouter un projet', onclick: () => openProjectModal() })
+        );
 
-      .side-foot {
-        grid-auto-flow: row;
-        margin-top: 0;
+        const rows = items.map(p => el('tr', {},
+          el('td', { 'data-label': 'Titre', text: p.title }),
+          el('td', { 'data-label': 'Description', text: p.description || '-' }),
+          el('td', { 'data-label': 'Live URL', text: p.live_url || '-' }),
+          el('td', { 'data-label': 'Actions', class: 'actions' },
+            el('button', { type: 'button', class: 'btn ghost sm', text: 'Modifier', onclick: () => openProjectModal(p) }),
+            el('button', { type: 'button', class: 'btn danger sm', text: 'Supprimer', onclick: () => deleteItem('projects', p.id, () => loadTabData('projects')) })
+          )
+        ));
+
+        const table = el('div', { class: 'table-wrap' },
+          el('table', {},
+            el('thead', {}, el('tr', {}, el('th', { text: 'Titre' }), el('th', { text: 'Description' }), el('th', { text: 'Live URL' }), el('th', { text: 'Actions' }))),
+            el('tbody', {}, rows.length ? rows : el('tr', {}, el('td', { colspan: '4', class: 'empty', text: 'Aucun projet.' })))
+          )
+        );
+        mainContent.replaceChildren(toolbar, table);
       }
+      // 7. AGENDA & NOTIFICATIONS
+      else if (id === 'agenda') {
+        const items = appData.agenda;
+        const toolbar = el('div', { class: 'toolbar' },
+          el('h2', { text: 'Gestion de l\'Agenda & Notifications' }),
+          el('button', { type: 'button', class: 'btn primary sm', text: '+ Nouvel événement', onclick: () => openAgendaModal() })
+        );
 
-      table, thead, tbody, tr, td {
-        display: block;
+        const rows = items.map(ev => el('tr', {},
+          el('td', { 'data-label': 'Titre', text: ev.title }),
+          el('td', { 'data-label': 'Date', text: fmtDate(ev.starts_on) }),
+          el('td', { 'data-label': 'Description', text: ev.description || '-' }),
+          el('td', { 'data-label': 'Actions', class: 'actions' },
+            el('button', { type: 'button', class: 'btn ghost sm', text: 'Modifier', onclick: () => openAgendaModal(ev) }),
+            el('button', { type: 'button', class: 'btn danger sm', text: 'Supprimer', onclick: () => deleteItem('agenda', ev.id, () => loadTabData('agenda')) })
+          )
+        ));
+
+        const table = el('div', { class: 'table-wrap' },
+          el('table', {},
+            el('thead', {}, el('tr', {}, el('th', { text: 'Titre' }), el('th', { text: 'Date' }), el('th', { text: 'Description' }), el('th', { text: 'Actions' }))),
+            el('tbody', {}, rows.length ? rows : el('tr', {}, el('td', { colspan: '4', class: 'empty', text: 'Aucun événement.' })))
+          )
+        );
+        mainContent.replaceChildren(toolbar, table);
       }
+      // 8. ÉQUIPE & RÔLES
+      else if (id === 'team') {
+        const items = appData.team;
+        const toolbar = el('div', { class: 'toolbar' },
+          el('h2', { text: 'Gestion de l\'Équipe & Rôles' }),
+          el('button', { type: 'button', class: 'btn primary sm', text: '+ Ajouter un membre', onclick: () => openTeamModal() })
+        );
 
-      thead {
-        display: none;
+        const rows = items.map(m => el('tr', {},
+          el('td', { 'data-label': 'Nom', text: m.full_name }),
+          el('td', { 'data-label': 'Rôle', text: m.role }),
+          el('td', { 'data-label': 'Pôle', text: m.pole || '-' }),
+          el('td', { 'data-label': 'GitHub', text: m.github ? 'Oui' : '-' }),
+          el('td', { 'data-label': 'Actions', class: 'actions' },
+            el('button', { type: 'button', class: 'btn ghost sm', text: 'Modifier', onclick: () => openTeamModal(m) }),
+            el('button', { type: 'button', class: 'btn danger sm', text: 'Supprimer', onclick: () => deleteItem('team', m.id, () => loadTabData('team')) })
+          )
+        ));
+
+        const table = el('div', { class: 'table-wrap' },
+          el('table', {},
+            el('thead', {}, el('tr', {}, el('th', { text: 'Nom' }), el('th', { text: 'Rôle' }), el('th', { text: 'Pôle' }), el('th', { text: 'GitHub' }), el('th', { text: 'Actions' }))),
+            el('tbody', {}, rows.length ? rows : el('tr', {}, el('td', { colspan: '5', class: 'empty', text: 'Aucun membre enregistré.' })))
+          )
+        );
+        mainContent.replaceChildren(toolbar, table);
       }
+      // 9. MANUEL INTERNE & LEADERSHIP
+      else if (id === 'manual') {
+        const manualText = el('textarea', { rows: 15, style: 'font-family: monospace; font-size: 0.9rem;' }, appData.manual || '');
+        const msg = el('p', { class: 'msg' });
 
-      tr {
-        padding: 12px 14px;
-        border-bottom: 1px solid var(--border);
+        const form = el('form', { class: 'stack panel' },
+          el('h2', { text: 'Édition du Manuel Interne & Leadership' }),
+          el('p', { class: 'dim', text: 'Modifiez directement le contenu du manuel. Il se met à jour instantanément sur la page dédiée du site officiel.' }),
+          manualText,
+          msg,
+          el('button', { type: 'submit', class: 'btn primary', text: 'Enregistrer le manuel' })
+        );
+
+        form.onsubmit = e => {
+          e.preventDefault();
+          appData.manual = manualText.value;
+          saveAppData(appData);
+          toast('Manuel mis à jour et synchronisé en direct !', 'ok');
+        };
+        mainContent.replaceChildren(form);
       }
-
-      td {
-        border: none;
-        padding: 4px 0;
-      }
-
-      td::before {
-        content: attr(data-label) ' : ';
-        color: var(--dim);
-        font-size: 0.8rem;
+      // 10. LIENS INTERNES
+      else if (id === 'links') {
+        const items = appData.links;
+        const toolbar = el('div', { class: 'toolbar' },
+          el('h2', { text: 'Gestion des Liens Internes' })
+        );
+        const rows = items.map(l => el('tr', {},
+          el('td', { 'data-label': 'Libellé', text: l.label }),
+          el('td', { 'data-label': 'URL', text: l.url })
+        ));
+        const table = el('div', { class: 'table-wrap' },
+          el('table', {},
+            el('thead', {}, el('tr', {}, el('th', { text: 'Libellé' }), el('th', { text: 'URL' }))),
+            el('tbody', {}, rows)
+          )
+        );
+        mainContent.replaceChildren(toolbar, table);
       }
     }
-  `;
 
-  const pageMarkup = `
-    <style>${styles}</style>
-    <div class="shell">
-      <aside class="side">
-        <div class="brand">
-          <div class="brand-badge">T</div>
-          <div class="brand-name">Tech-Stone One</div>
-        </div>
+    function deleteItem(category, id, onSuccess) {
+      if (!confirm('Voulez-vous vraiment supprimer cet élément ? Cette action est immédiate.')) return;
+      appData = getAppData();
+      appData[category] = appData[category].filter(x => x.id !== id);
+      saveAppData(appData);
+      toast('Supprimé avec succès', 'ok');
+      onSuccess();
+    }
 
-        <div class="side-nav">
-          <div class="nav-title">Navigation</div>
-          <button class="nav-btn active" type="button">Tableau de bord</button>
-          <button class="nav-btn" type="button">Commandes</button>
-          <button class="nav-btn" type="button">Produits</button>
-          <button class="nav-btn" type="button">Clients</button>
-          <button class="nav-btn" type="button">Livraisons</button>
-          <button class="nav-btn" type="button">Paramètres</button>
-        </div>
+    // --- MODALES D'AJOUT / MODIFICATION PROFESSIONNELLES ---
 
-        <div class="side-foot">
-          <div class="nav-title">Session</div>
-          <div class="who">admin@techstone.one</div>
-          <button class="nav-btn" type="button">Se déconnecter</button>
-        </div>
-      </aside>
+    function openVideoModal(item = null) {
+      const titleIn = el('input', { type: 'text', required: true, value: item ? item.title : '', maxlength: 150 });
+      const tagIn = el('input', { type: 'text', value: item ? item.tag || '' : '', placeholder: 'Code, IoT, Design' });
+      const dateIn = el('input', { type: 'date', value: item ? item.recorded_on || '' : '' });
+      const descIn = el('textarea', { rows: 2 }, item ? item.description || '' : '');
+      const urlIn = el('input', { type: 'url', value: item && !item.video_url?.startsWith('data:') ? item.video_url : '', placeholder: 'https://youtube.com/... (ou importer un fichier ci-dessous)' });
+      
+      const fileIn = el('input', { type: 'file', accept: 'video/*' });
+      let videoBase64 = item?.video_url?.startsWith('data:') ? item.video_url : '';
 
-      <main class="content">
-        <section class="intro">
-          <h1>Contrôle</h1>
-          <p>Suivez les performances de la boutique et gérez les opérations en temps réel.</p>
-        </section>
+      fileIn.onchange = e => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = event => {
+            videoBase64 = event.target.result;
+            toast('Vidéo importée avec succès !', 'ok');
+          };
+          reader.readAsDataURL(file);
+        }
+      };
 
-        <div class="live-box">
-          <span class="dot"></span>
-          <strong>Live</strong>
-          <span class="muted">Dernière mise à jour : maintenant</span>
-        </div>
+      const form = el('form', { class: 'stack' },
+        TS1.field('Titre de la formation', titleIn),
+        TS1.field('Tag / Catégorie', tagIn),
+        TS1.field('Date de publication', dateIn),
+        TS1.field('Description', descIn),
+        TS1.field('Lien URL de la vidéo (YouTube, etc.)', urlIn),
+        TS1.field('Ou importer le fichier vidéo directement (.mp4)', fileIn),
+        el('button', { type: 'submit', class: 'btn primary', text: 'Enregistrer la formation' })
+      );
 
-        <div class="cards">
-          <div class="stat">
-            <div class="stat-n">1 248</div>
-            <div class="stat-l">Ventes</div>
-          </div>
-          <div class="stat">
-            <div class="stat-n">96</div>
-            <div class="stat-l">Commandes en cours</div>
-          </div>
-          <div class="stat">
-            <div class="stat-n">€18.4k</div>
-            <div class="stat-l">Revenu</div>
-          </div>
-          <div class="stat">
-            <div class="stat-n">4.8%</div>
-            <div class="stat-l">Taux de conversion</div>
-          </div>
-        </div>
+      let dlg;
+      form.onsubmit = e => {
+        e.preventDefault();
+        appData = getAppData();
+        const finalVideoUrl = videoBase64 || urlIn.value.trim();
+        const payload = { 
+          id: item ? item.id : 'v_' + Date.now(), 
+          title: titleIn.value.trim(), 
+          tag: tagIn.value.trim(), 
+          recorded_on: dateIn.value, 
+          description: descIn.value.trim(),
+          video_url: finalVideoUrl 
+        };
+        if (item) {
+          appData.videos = appData.videos.map(v => v.id === item.id ? payload : v);
+        } else {
+          appData.videos.unshift(payload);
+        }
+        saveAppData(appData);
+        toast('Formation enregistrée et synchronisée !', 'ok');
+        dlg.close();
+        loadTabData('videos');
+      };
+      dlg = TS1.dialog(item ? 'Modifier la formation' : 'Nouvelle formation & vidéo', form);
+    }
 
-        <div class="toolbar">
-          <label>
-            <span class="sr-only">Période</span>
-            <select>
-              <option>7 derniers jours</option>
-              <option>30 derniers jours</option>
-              <option>90 derniers jours</option>
-            </select>
-          </label>
-        </div>
+    function openTeamModal(item = null) {
+      const nameIn = el('input', { type: 'text', required: true, value: item ? item.full_name : '' });
+      const emailIn = el('input', { type: 'email', required: true, value: item ? item.email : '' });
+      const roleIn = el('input', { type: 'text', required: true, value: item ? item.role : '', placeholder: 'Lead Developer, Designer...' });
+      const poleIn = el('input', { type: 'text', value: item ? item.pole || '' : '', placeholder: 'Développement Web, IoT...' });
+      const motiIn = el('textarea', { rows: 2 }, item ? item.motivation || '' : '');
+      const ghIn = el('input', { type: 'url', value: item ? item.github || '' : '', placeholder: 'https://github.com/moncompte' });
+      const portIn = el('input', { type: 'url', value: item ? item.portfolio || '' : '', placeholder: 'https://monportfolio.netlify.app' });
 
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Commande</th>
-                <th>Client</th>
-                <th>Statut</th>
-                <th>Montant</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td data-label="Commande">#TS1-2048</td>
-                <td data-label="Client">Sarah L.</td>
-                <td data-label="Statut">En cours</td>
-                <td data-label="Montant">€240.00</td>
-                <td data-label="Actions"><div class="actions"><button type="button">Voir</button><button type="button">Valider</button></div></td>
-              </tr>
-              <tr>
-                <td data-label="Commande">#TS1-2051</td>
-                <td data-label="Client">Noah B.</td>
-                <td data-label="Statut">Livré</td>
-                <td data-label="Montant">€185.50</td>
-                <td data-label="Actions"><div class="actions"><button type="button">Voir</button><button type="button">Détails</button></div></td>
-              </tr>
-              <tr>
-                <td data-label="Commande">#TS1-2060</td>
-                <td data-label="Client">Claire M.</td>
-                <td data-label="Statut">À préparer</td>
-                <td data-label="Montant">€310.00</td>
-                <td data-label="Actions"><div class="actions"><button type="button">Voir</button><button type="button">Mettre à jour</button></div></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </main>
-    </div>
-  `;
+      const form = el('form', { class: 'stack' },
+        TS1.field('Nom complet', nameIn),
+        TS1.field('Adresse Email', emailIn),
+        TS1.field('Rôle principal', roleIn),
+        TS1.field('Pôle / Section', poleIn),
+        TS1.field('Motivations / Bio', motiIn),
+        TS1.field('Lien GitHub', ghIn),
+        TS1.field('Lien Portfolio / Projet personnel', portIn),
+        el('button', { type: 'submit', class: 'btn primary', text: 'Enregistrer le membre' })
+      );
+
+      let dlg;
+      form.onsubmit = e => {
+        e.preventDefault();
+        appData = getAppData();
+        const payload = {
+          id: item ? item.id : 't_' + Date.now(),
+          full_name: nameIn.value.trim(),
+          email: emailIn.value.trim(),
+          role: roleIn.value.trim(),
+          pole: poleIn.value.trim(),
+          motivation: motiIn.value.trim(),
+          github: ghIn.value.trim(),
+          portfolio: portIn.value.trim(),
+          active: true
+        };
+        if (item) {
+          appData.team = appData.team.map(m => m.id === item.id ? payload : m);
+        } else {
+          appData.team.unshift(payload);
+        }
+        saveAppData(appData);
+        toast('Membre de l\'équipe enregistré !', 'ok');
+        dlg.close();
+        loadTabData('team');
+      };
+      dlg = TS1.dialog(item ? 'Modifier le membre' : 'Ajouter un membre à l\'équipe', form);
+    }
+
+    function openExpertiseModal(item = null) {
+      const titleIn = el('input', { type: 'text', required: true, value: item ? item.title : '' });
+      const descIn = el('textarea', { rows: 2 }, item ? item.description || '' : '');
+      const iconIn = el('input', { type: 'text', value: item ? item.icon || '' : '', placeholder: 'fa-code' });
+      const form = el('form', { class: 'stack' },
+        TS1.field('Titre', titleIn), TS1.field('Description', descIn), TS1.field('Icône FontAwesome', iconIn),
+        el('button', { type: 'submit', class: 'btn primary', text: 'Enregistrer' })
+      );
+      let dlg;
+      form.onsubmit = e => {
+        e.preventDefault();
+        appData = getAppData();
+        const payload = { id: item ? item.id : 'e_' + Date.now(), title: titleIn.value.trim(), description: descIn.value.trim(), icon: iconIn.value.trim() };
+        if (item) appData.expertises = appData.expertises.map(x => x.id === item.id ? payload : x);
+        else appData.expertises.unshift(payload);
+        saveAppData(appData);
+        toast('Expertise enregistrée', 'ok');
+        dlg.close();
+        loadTabData('expertises');
+      };
+      dlg = TS1.dialog(item ? 'Modifier l\'expertise' : 'Nouvelle expertise', form);
+    }
+
+    function openEventModal(item = null) {
+      const titleIn = el('input', { type: 'text', required: true, value: item ? item.title : '' });
+      const badgeIn = el('input', { type: 'text', value: item ? item.badge || '' : '' });
+      const descIn = el('textarea', { rows: 2 }, item ? item.description || '' : '');
+      const form = el('form', { class: 'stack' },
+        TS1.field('Titre', titleIn), TS1.field('Badge', badgeIn), TS1.field('Description', descIn),
+        el('button', { type: 'submit', class: 'btn primary', text: 'Enregistrer' })
+      );
+      let dlg;
+      form.onsubmit = e => {
+        e.preventDefault();
+        appData = getAppData();
+        const payload = { id: item ? item.id : 'ev_' + Date.now(), title: titleIn.value.trim(), badge: badgeIn.value.trim(), description: descIn.value.trim() };
+        if (item) appData.events = appData.events.map(x => x.id === item.id ? payload : x);
+        else appData.events.unshift(payload);
+        saveAppData(appData);
+        toast('Événement enregistré', 'ok');
+        dlg.close();
+        loadTabData('events');
+      };
+      dlg = TS1.dialog(item ? 'Modifier l\'événement' : 'Nouvel événement', form);
+    }
+
+    function openNewsModal(item = null) {
+      const titleIn = el('input', { type: 'text', required: true, value: item ? item.title : '' });
+      const sourceIn = el('input', { type: 'text', value: item ? item.source || 'TS NEWS' : 'TS NEWS' });
+      const descIn = el('textarea', { rows: 2 }, item ? item.description || '' : '');
+      const form = el('form', { class: 'stack' },
+        TS1.field('Titre', titleIn), TS1.field('Source', sourceIn), TS1.field('Description', descIn),
+        el('button', { type: 'submit', class: 'btn primary', text: 'Enregistrer' })
+      );
+      let dlg;
+      form.onsubmit = e => {
+        e.preventDefault();
+        appData = getAppData();
+        const payload = { id: item ? item.id : 'n_' + Date.now(), title: titleIn.value.trim(), source: sourceIn.value.trim(), description: descIn.value.trim() };
+        if (item) appData.news = appData.news.map(x => x.id === item.id ? payload : x);
+        else appData.news.unshift(payload);
+        saveAppData(appData);
+        toast('Actualité enregistrée', 'ok');
+        dlg.close();
+        loadTabData('news');
+      };
+      dlg = TS1.dialog(item ? 'Modifier l\'actualité' : 'Nouvelle actualité', form);
+    }
+
+    function openProjectModal(item = null) {
+      const titleIn = el('input', { type: 'text', required: true, value: item ? item.title : '' });
+      const descIn = el('textarea', { rows: 2 }, item ? item.description || '' : '');
+      const liveIn = el('input', { type: 'url', value: item ? item.live_url || '' : '', placeholder: 'https://...' });
+      const form = el('form', { class: 'stack' },
+        TS1.field('Titre', titleIn), TS1.field('Description', descIn), TS1.field('Lien Live', liveIn),
+        el('button', { type: 'submit', class: 'btn primary', text: 'Enregistrer' })
+      );
+      let dlg;
+      form.onsubmit = e => {
+        e.preventDefault();
+        appData = getAppData();
+        const payload = { id: item ? item.id : 'p_' + Date.now(), title: titleIn.value.trim(), description: descIn.value.trim(), live_url: liveIn.value.trim() };
+        if (item) appData.projects = appData.projects.map(x => x.id === item.id ? payload : x);
+        else appData.projects.unshift(payload);
+        saveAppData(appData);
+        toast('Projet enregistré', 'ok');
+        dlg.close();
+        loadTabData('projects');
+      };
+      dlg = TS1.dialog(item ? 'Modifier le projet' : 'Nouveau projet', form);
+    }
+
+    function openAgendaModal(item = null) {
+      const titleIn = el('input', { type: 'text', required: true, value: item ? item.title : '' });
+      const dateIn = el('input', { type: 'date', required: true, value: item ? item.starts_on : '' });
+      const descIn = el('textarea', { rows: 2 }, item ? item.description || '' : '');
+      const form = el('form', { class: 'stack' },
+        TS1.field('Titre', titleIn), TS1.field('Date', dateIn), TS1.field('Description', descIn),
+        el('button', { type: 'submit', class: 'btn primary', text: 'Enregistrer' })
+      );
+      let dlg;
+      form.onsubmit = e => {
+        e.preventDefault();
+        appData = getAppData();
+        const payload = { id: item ? item.id : 'ag_' + Date.now(), title: titleIn.value.trim(), starts_on: dateIn.value, description: descIn.value.trim() };
+        if (item) appData.agenda = appData.agenda.map(x => x.id === item.id ? payload : x);
+        else appData.agenda.unshift(payload);
+        saveAppData(appData);
+        toast('Agenda enregistré', 'ok');
+        dlg.close();
+        loadTabData('agenda');
+      };
+      dlg = TS1.dialog(item ? 'Modifier l\'agenda' : 'Nouvel événement agenda', form);
+    }
+
+    switchTab('live');
+  }
 
   const mount = () => {
-    let app = document.getElementById('app');
-    if (!app) {
-      app = document.createElement('div');
-      app.id = 'app';
-      document.body.appendChild(app);
+    let appEl = document.getElementById('app');
+    if (!appEl) {
+      appEl = document.createElement('div');
+      appEl.id = 'app';
+      document.body.appendChild(appEl);
     }
-    app.innerHTML = pageMarkup;
+
+    TS1.authGate({
+      root: app,
+      title: 'Centre de contrôle Admin',
+      subtitle: 'Pilotage complet, réel et synchronisé de Tech-Stone One.',
+      onReady: adminView
+    });
   };
 
   if (document.readyState === 'loading') {

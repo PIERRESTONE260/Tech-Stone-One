@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TS1 Academy | Tech-Stone One</title>
-    <meta name="description" content="TS1 Academy : l'espace de formation continue de Tech-Stone One.">
+    <meta name="description" content="TS1 Academy : Espace de formation dynamique en programmation, design, IoT et leadership, géré depuis le centre de contrôle.">
     <meta name="theme-color" content="#060b13">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta property="og:type" content="website">
     <meta property="og:title" content="TS1 Academy | Tech-Stone One">
-    <meta property="og:description" content="L'espace de formation continue de Tech-Stone One.">
+    <meta property="og:description" content="Espace de formation dynamique en programmation, design, IoT et leadership pour nos équipes et futurs talents.">
     <meta property="og:image" content="Tech-StoneOne.png">
 
     <link rel="manifest" href="manifest.json">
@@ -72,7 +72,8 @@
 
         .hero-academy { text-align: center; padding: 60px 20px; }
         .hero-academy h1 { font-family: 'Space Grotesk', 'Inter', sans-serif; font-size: clamp(2rem, 6vw, 3rem); margin-bottom: 10px; }
-        .hero-academy p { color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
+        .hero-academy p { color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; }
+        .hero-desc { max-width: 700px; margin: 0 auto; color: var(--text-dim); font-size: 0.95rem; }
 
         main { flex: 1; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px 100px; width: 100%; }
@@ -152,8 +153,9 @@
     </header>
 
     <section class="hero-academy">
-        <p>Espace de Formation Continue</p>
+        <p>Apprentissage Dynamique • Programmation, IoT, Design & Leadership</p>
         <h1>TS1 Academy</h1>
+        <p class="hero-desc">Un espace de formation continue et de transmission de compétences conçu pour nos équipes actuelles et futures. L'ensemble des modules vidéo et replays est publié et géré en temps réel depuis notre centre de contrôle administrateur.</p>
     </section>
 
     <main class="container" id="main">
@@ -167,16 +169,16 @@
                 <h2 id="live-title"></h2>
                 <p id="live-desc" hidden></p>
                 <a id="live-link" href="#" target="_blank" rel="noopener noreferrer" class="btn-join">
-                    <i class="fas fa-video" aria-hidden="true"></i> REJOINDRE LA FORMATION
+                    <i class="fas fa-video" aria-hidden="true"></i> REJOINDRE LA SESSION LIVE
                 </a>
             </section>
 
             <section aria-labelledby="archives-title">
-                <h2 class="section-title" id="archives-title">Archives des Formations</h2>
+                <h2 class="section-title" id="archives-title">Bibliothèque des Replays & Formations</h2>
                 <div class="video-grid" id="video-grid"></div>
                 <div class="empty-state" id="video-empty" hidden>
                     <i class="fas fa-video-slash" aria-hidden="true"></i>
-                    Aucune formation archivée pour le moment.
+                    Aucune formation vidéo publiée pour le moment depuis le centre de contrôle.
                 </div>
                 <div class="empty-state error" id="load-error" role="alert" hidden>
                     <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
@@ -191,142 +193,12 @@
     </main>
 
     <footer>
-        &copy; 2026 Tech-Stone One Academy | L'excellence par la connaissance.
+        &copy; 2026 Tech-Stone One Academy | Bâtir les leaders de demain par la technique et l'innovation.
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
     <script src="ts1-core.js"></script>
-    <script>
-    (function () {
-        'use strict';
-
-        function esc(value) {
-            return String(value == null ? '' : value).replace(/[&<>"']/g, function (c) {
-                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-            });
-        }
-
-        function formatDate(iso) {
-            var d = new Date(String(iso).slice(0, 10) + 'T00:00:00');
-            if (isNaN(d)) return '';
-            return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
-        }
-
-        function renderLive(live) {
-            var section = document.getElementById('live-section');
-            var url = live && live.active ? TS1.safeHttps(live.url) : '';
-            if (!live || !live.title || !url) { section.hidden = true; return; }
-
-            document.getElementById('live-title').textContent = live.title;
-            var desc = document.getElementById('live-desc');
-            if (live.description) { desc.textContent = live.description; desc.hidden = false; }
-            else { desc.hidden = true; }
-            document.getElementById('live-link').href = url;
-            section.hidden = false;
-        }
-
-        function renderVideos(videos) {
-            var grid = document.getElementById('video-grid');
-            var empty = document.getElementById('video-empty');
-            var list = Array.isArray(videos) ? videos.filter(function (v) { return v && v.title; }) : [];
-
-            if (!list.length) { grid.innerHTML = ''; empty.hidden = false; return; }
-            empty.hidden = true;
-
-            grid.innerHTML = list.map(function (v) {
-                var thumb = TS1.safeImage(v.thumb_url);
-                var link = TS1.safeHttps(v.video_url);
-                var meta = [];
-                if (v.recorded_on) { var f = formatDate(v.recorded_on); if (f) meta.push('Enregistré le ' + f); }
-                if (v.duration) meta.push(v.duration);
-
-                return '<article class="video-card">' +
-                    '<div class="video-thumb">' +
-                        (thumb ? '<img src="' + esc(thumb) + '" alt="" loading="lazy" referrerpolicy="no-referrer">' : '') +
-                        '<i class="fas fa-play-circle play-overlay" aria-hidden="true"></i>' +
-                    '</div>' +
-                    '<div class="video-info">' +
-                        (v.tag ? '<span class="video-tag">' + esc(v.tag) + '</span>' : '') +
-                        '<h3>' + esc(v.title) + '</h3>' +
-                        (meta.length ? '<p class="video-meta">' + esc(meta.join(' • ')) + '</p>' : '') +
-                        (link ? '<a class="video-link" href="' + esc(link) + '" target="_blank" rel="noopener noreferrer">Visionner le Replay →</a>' : '') +
-                    '</div></article>';
-            }).join('');
-        }
-
-        function renderStats(stats) {
-            var panel = document.getElementById('stats-panel');
-            var list = Array.isArray(stats) ? stats.filter(function (s) { return s && s.label && s.value !== undefined && s.value !== null && s.value !== ''; }) : [];
-            if (!list.length) { panel.hidden = true; panel.innerHTML = ''; return; }
-
-            panel.innerHTML = list.map(function (s) {
-                return '<div class="perf-card"><span class="value">' + esc(s.value) + '</span><p class="label">' + esc(s.label) + '</p></div>';
-            }).join('');
-            panel.hidden = false;
-        }
-
-        function loadAll(sb) {
-            return Promise.all([
-                sb.from('academy_live').select('*').eq('id', 1).maybeSingle(),
-                sb.from('academy_videos').select('*').order('recorded_on', { ascending: false }),
-                sb.from('academy_stats').select('*').order('position')
-            ]).then(function (r) {
-                var err = r[0].error || r[1].error || r[2].error;
-                if (err) throw err;
-                return { live: r[0].data, videos: r[1].data || [], stats: r[2].data || [] };
-            });
-        }
-
-        function start() {
-            var sb = TS1.sb;
-            var loadError = document.getElementById('load-error');
-
-            document.getElementById('gate').hidden = true;
-            document.getElementById('academy').hidden = false;
-            document.getElementById('nav-auth').hidden = false;
-            document.getElementById('btn-logout').addEventListener('click', function () { TS1.signOut(); });
-            TS1.idleLogout(60);
-
-            loadAll(sb)
-                .then(function (data) {
-                    loadError.hidden = true;
-                    renderLive(data.live);
-                    renderVideos(data.videos);
-                    renderStats(data.stats);
-                })
-                .catch(function () {
-                    document.getElementById('video-empty').hidden = true;
-                    loadError.hidden = false;
-                });
-
-            setInterval(function () {
-                if (document.hidden) return;
-                sb.from('academy_live').select('*').eq('id', 1).maybeSingle()
-                    .then(function (r) { if (!r.error) renderLive(r.data); });
-            }, 60000);
-        }
-
-        document.getElementById('skip-link').addEventListener('click', function (e) {
-            e.preventDefault();
-            var main = document.getElementById('main');
-            main.setAttribute('tabindex', '-1');
-            main.focus();
-        });
-
-        TS1.authGate({
-            root: document.getElementById('gate'),
-            title: 'TS1 Academy',
-            subtitle: 'Les formations en direct et les replays sont réservés aux membres. Connectez-vous avec votre compte Tech-Stone One.',
-            roles: ['membre', 'direction'],
-            denyMessage: 'Votre compte n\'a pas accès à TS1 Academy.',
-            onReady: start
-        });
-
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').catch(function (err) { console.log(err); });
-        }
-    })();
-    </script>
+    <script src="academy.js"></script>
 </body>
 </html>

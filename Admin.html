@@ -3,274 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TS1 · Administration</title>
+    <title>Centre de Contrôle Admin | Tech-Stone One</title>
+    <meta name="description" content="Panneau d'administration sécurisé pour la direction de Tech-Stone One.">
+    <meta name="theme-color" content="#060b13">
+    <link rel="shortcut icon" href="logo.svg" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="ts1-ui.css">
-    <style>
-        .admin-layout { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
-        aside { background: var(--panel); border-right: 1px solid var(--border); padding: 20px; display: flex; flex-direction: column; gap: 20px; }
-        aside .brand { display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 1.1rem; }
-        aside nav { display: grid; gap: 6px; }
-        aside nav button { background: transparent; border: none; color: var(--dim); padding: 10px 14px; text-align: left; border-radius: 10px; font: inherit; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        aside nav button:hover, aside nav button.active { background: rgba(0, 132, 255, 0.15); color: var(--accent-text); }
-        main { padding: 30px; overflow-y: auto; max-width: 1200px; width: 100%; }
-        .tab-content { display: none; }
-        .tab-content.active { display: grid; gap: 20px; }
-        .table-wrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--border); border-radius: 16px; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
-        th, td { padding: 14px 16px; border-bottom: 1px solid var(--border); }
-        th { color: var(--dim); font-weight: 600; background: rgba(255,255,255,0.02); }
-        tr:last-child td { border-bottom: none; }
-        .toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
-        @media(max-width: 768px) { .admin-layout { grid-template-columns: 1fr; } aside { border-right: none; border-bottom: 1px solid var(--border); } }
-    </style>
 </head>
 <body>
 
-    <div id="app"></div>
+    <div id="app">
+        <!-- Le bouton hamburger mobile -->
+        <button type="button" class="hamburger-btn" id="hamburgerBtn" aria-label="Menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <!-- L'application d'administration sera injectée dynamiquement ici par admin.js après authentification -->
+        <div class="auth-wrap">
+            <div class="auth-card">
+                <div class="brand">
+                    <img src="logo.svg" alt="" width="38" height="38">
+                    <strong>Chargement de l'administration...</strong>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <!-- SDK Supabase & Core TS1 -->
+    <!-- Bibliothèques et scripts principaux -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
     <script src="ts1-core.js"></script>
-    <script>
-    (function () {
-        'use strict';
-        const { el, toast } = TS1;
-        const app = document.getElementById('app');
-
-        function adminView({ profile, user }) {
-            TS1.idleLogout(30);
-            const sb = TS1.sb;
-
-            const tabs = [
-                { id: 'live', label: '🔴 Direct Academy' },
-                { id: 'videos', label: '📺 Replays' },
-                { id: 'agenda', label: '📅 Agenda' },
-                { id: 'news', label: '📰 Actualités' },
-                { id: 'projects', label: '🚀 Projets' },
-                { id: 'requests', label: '📥 Demandes clients' },
-                { id: 'applications', label: '📋 Candidatures' },
-                { id: 'manual', label: '📖 Manuel Interne' },
-                { id: 'links', label: '🔗 Liens Internes' },
-                { id: 'profiles', label: '👥 Profils & Rôles' }
-            ];
-
-            let currentTab = 'live';
-
-            const navBtns = tabs.map(t => {
-                const btn = el('button', { type: 'button', text: t.label, onclick: () => switchTab(t.id) });
-                if (t.id === currentTab) btn.className = 'active';
-                btn.dataset.id = t.id;
-                return btn;
-            });
-
-            const sidebar = el('aside', {},
-                el('div', { class: 'brand' },
-                    el('img', { src: 'logo.svg', alt: '', width: '30', height: '30' }),
-                    el('span', { text: 'TS1 · Contrôle' })
-                ),
-                el('nav', {}, navBtns),
-                el('div', { style: 'margin-top:auto; display:grid; gap:8px;' },
-                    el('a', { class: 'btn ghost sm', href: 'membre.html', text: '← Espace membre' }),
-                    el('button', { type: 'button', class: 'btn danger sm', text: 'Déconnexion', onclick: () => TS1.signOut() })
-                )
-            );
-
-            const mainContent = el('main', {}, el('p', { class: 'dim', text: 'Chargement des modules d\'administration...' }));
-            const layout = el('div', { class: 'admin-layout' }, sidebar, mainContent);
-
-            app.replaceChildren(layout);
-
-            function switchTab(id) {
-                currentTab = id;
-                navBtns.forEach(b => b.classList.toggle('active', b.dataset.id === id));
-                loadTabData(id);
-            }
-
-            async function loadTabData(id) {
-                mainContent.replaceChildren(el('p', { class: 'dim', text: 'Chargement en cours...' }));
-
-                if (id === 'live') {
-                    const res = await sb.from('academy_live').select('*').eq('id', 1).maybeSingle();
-                    const data = res.data || { active: false, title: '', description: '', url: '' };
-
-                    const activeChk = el('input', { type: 'checkbox', checked: data.active });
-                    const titleIn = el('input', { type: 'text', value: data.title || '', maxlength: 150 });
-                    const descIn = el('textarea', { rows: 3, maxlength: 500 }, data.description || '');
-                    const urlIn = el('input', { type: 'url', value: data.url || '' });
-                    const msg = el('p', { class: 'msg' });
-
-                    const form = el('form', { class: 'stack panel' },
-                        el('h2', { text: 'Gestion du Flux en Direct' }),
-                        el('label', { class: 'check' }, activeChk, el('span', { text: 'Activer le direct sur l\'espace membre' })),
-                        TS1.field('Titre de la session', titleIn),
-                        TS1.field('Description', descIn),
-                        TS1.field('Lien de la réunion (https://...)', urlIn),
-                        msg,
-                        el('button', { type: 'submit', class: 'btn primary', text: 'Enregistrer le direct' })
-                    );
-
-                    form.onsubmit = async e => {
-                        e.preventDefault();
-                        const r = await sb.from('academy_live').update({
-                            active: activeChk.checked,
-                            title: titleIn.value.trim(),
-                            description: descIn.value.trim(),
-                            url: urlIn.value.trim(),
-                            updated_at: new Date()
-                        }).eq('id', 1);
-
-                        if (r.error) { msg.className = 'msg err'; msg.textContent = r.error.message; }
-                        else { msg.className = 'msg ok'; msg.textContent = 'Modifications enregistrées avec succès.'; toast('Direct mis à jour', 'ok'); }
-                    };
-
-                    mainContent.replaceChildren(form);
-                }
-                else if (id === 'agenda') {
-                    const res = await sb.from('agenda_events').select('*').order('starts_on', { ascending: true });
-                    const events = res.data || [];
-
-                    const toolbar = el('div', { class: 'toolbar' },
-                        el('h2', { text: 'Gestion de l\'Agenda' }),
-                        el('button', { type: 'button', class: 'btn primary sm', text: '+ Nouvel événement', onclick: () => openAgendaModal() })
-                    );
-
-                    const rows = events.map(ev => el('tr', {},
-                        el('td', { text: ev.title }),
-                        el('td', { text: TS1.fmtDate(ev.starts_on) }),
-                        el('td', { text: ev.description || '-' }),
-                        el('td', { class: 'row-end' },
-                            el('button', { type: 'button', class: 'btn ghost sm', text: 'Modifier', onclick: () => openAgendaModal(ev) }),
-                            el('button', { type: 'button', class: 'btn danger sm', text: 'Supprimer', onclick: () => deleteItem('agenda_events', ev.id, () => loadTabData('agenda')) })
-                        )
-                    ));
-
-                    const table = el('div', { class: 'table-wrap' },
-                        el('table', {},
-                            el('thead', {}, el('tr', {}, el('th', { text: 'Titre' }), el('th', { text: 'Date' }), el('th', { text: 'Description' }), el('th', { text: 'Actions' }))),
-                            el('tbody', {}, rows.length ? rows : el('tr', {}, el('td', { colspan: '4', class: 'empty', text: 'Aucun événement dans l\'agenda.' })))
-                        )
-                    );
-
-                    mainContent.replaceChildren(toolbar, table);
-                }
-                else if (id === 'requests') {
-                    const res = await sb.from('client_requests').select('*').order('created_at', { ascending: false });
-                    const reqs = res.data || [];
-
-                    const rows = reqs.map(r => el('tr', {},
-                        el('td', { text: r.name }),
-                        el('td', { text: r.service }),
-                        el('td', { text: r.contact || '-' }),
-                        el('td', { text: r.message }),
-                        el('td', { text: r.status })
-                    ));
-
-                    const table = el('div', { class: 'table-wrap' },
-                        el('table', {},
-                            el('thead', {}, el('tr', {}, el('th', { text: 'Nom' }), el('th', { text: 'Service' }), el('th', { text: 'Contact' }), el('th', { text: 'Message' }), el('th', { text: 'Statut' }))),
-                            el('tbody', {}, rows.length ? rows : el('tr', {}, el('td', { colspan: '5', class: 'empty', text: 'Aucune demande client.' })))
-                        )
-                    );
-                    mainContent.replaceChildren(el('h2', { text: 'Demandes de services reçues' }), table);
-                }
-                else if (id === 'applications') {
-                    const res = await sb.from('applications').select('*').order('created_at', { ascending: false });
-                    const apps = res.data || [];
-
-                    const rows = apps.map(a => el('tr', {},
-                        el('td', { text: a.full_name }),
-                        el('td', { text: a.pole || '-' }),
-                        el('td', { text: a.email || a.phone || '-' }),
-                        el('td', { text: a.message || '-' }),
-                        el('td', { text: a.status })
-                    ));
-
-                    const table = el('div', { class: 'table-wrap' },
-                        el('table', {},
-                            el('thead', {}, el('tr', {}, el('th', { text: 'Nom complet' }), el('th', { text: 'Pôle' }), el('th', { text: 'Contact' }), el('th', { text: 'Message' }), el('th', { text: 'Statut' }))),
-                            el('tbody', {}, rows.length ? rows : el('tr', {}, el('td', { colspan: '5', class: 'empty', text: 'Aucune candidature reçue.' })))
-                        )
-                    );
-                    mainContent.replaceChildren(el('h2', { text: 'Candidatures reçues' }), table);
-                }
-                else if (id === 'profiles') {
-                    const res = await sb.from('profiles').select('*').order('created_at', { ascending: false });
-                    const profiles = res.data || [];
-
-                    const rows = profiles.map(p => el('tr', {},
-                        el('td', { text: p.full_name || 'Sans nom' }),
-                        el('td', { text: p.email }),
-                        el('td', { text: p.role }),
-                        el('td', { text: p.pole || '-' }),
-                        el('td', { text: p.active ? 'Actif' : 'Inactif' })
-                    ));
-
-                    const table = el('div', { class: 'table-wrap' },
-                        el('table', {},
-                            el('thead', {}, el('tr', {}, el('th', { text: 'Nom' }), el('th', { text: 'Email' }), el('th', { text: 'Rôle' }), el('th', { text: 'Pôle' }), el('th', { text: 'Statut' }))),
-                            el('tbody', {}, rows.length ? rows : el('tr', {}, el('td', { colspan: '5', class: 'empty', text: 'Aucun profil trouvé.' })) )
-                        )
-                    );
-                    mainContent.replaceChildren(el('h2', { text: 'Gestion des Membres & Rôles' }), table);
-                }
-                else {
-                    mainContent.replaceChildren(el('div', { class: 'panel' }, el('h2', { text: tabs.find(t => t.id === id).label }), el('p', { class: 'dim', text: 'Module en cours de chargement ou gérable directement via Supabase.' })));
-                }
-            }
-
-            async function deleteItem(table, id, onSuccess) {
-                if (!confirm('Voulez-vous vraiment supprimer cet élément ?')) return;
-                const r = await sb.from(table).delete().eq('id', id);
-                if (r.error) toast('Erreur de suppression : ' + r.error.message, 'err');
-                else { toast('Élément supprimé', 'ok'); onSuccess(); }
-            }
-
-            function openAgendaModal(item = null) {
-                const titleIn = el('input', { type: 'text', required: true, value: item ? item.title : '', maxlength: 150 });
-                const dateIn = el('input', { type: 'date', required: true, value: item ? item.starts_on : '' });
-                const descIn = el('textarea', { rows: 3, maxlength: 500 }, item ? item.description || '' : '');
-                const msg = el('p', { class: 'msg' });
-
-                const form = el('form', { class: 'stack' },
-                    TS1.field('Titre de l\'événement', titleIn),
-                    TS1.field('Date', dateIn),
-                    TS1.field('Description', descIn),
-                    msg,
-                    el('button', { type: 'submit', class: 'btn primary', text: 'Enregistrer' })
-                );
-
-                let dlg;
-                form.onsubmit = async e => {
-                    e.preventDefault();
-                    const payload = { title: titleIn.value.trim(), starts_on: dateIn.value, description: descIn.value.trim() };
-                    let r;
-                    if (item) {
-                        r = await sb.from('agenda_events').update(payload).eq('id', item.id);
-                    } else {
-                        r = await sb.from('agenda_events').insert([payload]);
-                    }
-
-                    if (r.error) { msg.className = 'msg err'; msg.textContent = r.error.message; }
-                    else { toast('Événement enregistré', 'ok'); dlg.close(); loadTabData('agenda'); }
-                };
-
-                dlg = TS1.dialog(item ? 'Modifier l\'événement' : 'Nouvel événement', form);
-            }
-
-            switchTab('live');
-        }
-
-        TS1.authGate({
-            root: app,
-            title: 'Administration TS1',
-            subtitle: 'Connexion réservée à la direction de Tech-Stone One.',
-            roles: ['direction'],
-            denyMessage: 'Accès refusé : ce panneau est strictement réservé à la direction.',
-            denyLink: { href: 'membre.html', text: 'Aller à l\'espace membre' },
-            onReady: adminView
-        });
-    })();
-    </script>
+    <script src="admin.js"></script>
 </body>
 </html>

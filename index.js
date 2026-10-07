@@ -56,13 +56,13 @@
 
             /* Contenu de secours : affiché si la base n'est pas configurée ou injoignable */
             var NEWS_FALLBACK = [
-                { title: 'Succès FilmsAll', description: 'Déploiement sur Netlify OK.', image_url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400', source: 'TS NEWS' },
-                { title: 'FilmsAll v2', description: 'Sécurité renforcée.', image_url: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=400', source: 'TS NEWS' }
+                { title: 'Succès FilmsAll', description: 'Déploiement sur Netlify OK[cite: 10].', image_url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400', source: 'TS NEWS' },
+                { title: 'FilmsAll v2', description: 'Sécurité renforcée[cite: 10].', image_url: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=400', source: 'TS NEWS' }
             ];
             var AGENDA_FALLBACK = [
-                { starts_on: '2026-04-18', title: 'Réunion Stratégique TS1', description: 'Déploiement des terminaux NFC.' },
-                { starts_on: '2026-04-22', title: 'Audit de Sécurité', description: 'Revue des protocoles du manuel opérationnel.' },
-                { starts_on: '2026-04-30', title: 'Lancement Beta "FilmsAll"', description: 'Phase de test public de la plateforme.' }
+                { starts_on: '2026-04-18', title: 'Réunion Stratégique TS1', description: 'Déploiement des terminaux NFC[cite: 10].' },
+                { starts_on: '2026-04-22', title: 'Audit de Sécurité', description: 'Revue des protocoles du manuel opérationnel[cite: 10].' },
+                { starts_on: '2026-04-30', title: 'Lancement Beta "FilmsAll"', description: 'Phase de test public de la plateforme[cite: 10].' }
             ];
 
             /* ---------- MENU ---------- */
@@ -111,7 +111,7 @@
                 var link = document.getElementById('d-' + id);
                 if (link) { link.classList.add('active'); link.setAttribute('aria-current', 'page'); }
 
-                document.title = (id === 'home' ? '' : link ? link.textContent + ' | ' : '') + 'Tech-Stone One | Innovation & Diversité';
+                document.title = (id === 'home' ? '' : link ? link.textContent + ' | ' : '') + 'Tech-Stone One | Innovation, IoT & Leadership';
                 window.scrollTo(0, 0);
 
                 if (id === 'news') loadInternalNews();
@@ -126,7 +126,7 @@
                 loadOnce('news', 'news?select=title,description,image_url,source&order=created_at.desc&limit=24', NEWS_FALLBACK)
                     .then(function (res) {
                         if (!res.rows.length) {
-                            container.innerHTML = '<p class="empty-note">Aucune actualité interne pour le moment.</p>';
+                            container.innerHTML = '<p class="empty-note">Aucune actualité interne pour le moment[cite: 10].</p>';
                             return;
                         }
                         container.innerHTML = res.rows.map(function (n) {
@@ -162,7 +162,7 @@
                 var html = '<p class="agenda-sub">À venir</p>';
                 html += upcoming.length
                     ? upcoming.map(function (e) { return agendaItem(e, false); }).join('')
-                    : '<p class="agenda-empty">Aucun événement à venir pour le moment.</p>';
+                    : '<p class="agenda-empty">Aucun événement à venir pour le moment[cite: 10].</p>';
                 if (past.length) {
                     html += '<p class="agenda-sub">Événements passés</p>' + past.map(function (e) { return agendaItem(e, true); }).join('');
                 }
@@ -197,7 +197,7 @@
                         if (!res.live) return;
                         grid.innerHTML = res.rows.length
                             ? res.rows.map(projectCard).join('')
-                            : '<p class="empty-note">Aucune réalisation publiée pour le moment.</p>';
+                            : '<p class="empty-note">Aucune réalisation publiée pour le moment[cite: 10].</p>';
                     });
             }
 
@@ -221,7 +221,12 @@
             });
 
             /* ---------- FORMULAIRE ---------- */
-            var SERVICES = { web: 'Développement Web', design: 'Design & Print', repair: 'Maintenance IoT' };
+            var SERVICES = { 
+                web: 'Développement Web & Logiciel', 
+                design: 'Design & Print NFC', 
+                repair: 'Systèmes IoT & Maintenance', 
+                academy: 'Formation & Leadership' 
+            };
             var note = document.getElementById('form-note');
             var lastSaved = '';
 
@@ -236,7 +241,7 @@
                 if (sig === lastSaved) return;
                 lastSaved = sig;
                 rest('client_requests', { method: 'POST', body: payload })
-                    .then(function () { setNote('Demande enregistrée. Nous reviendrons vers vous rapidement.', true); })
+                    .then(function () { setNote('Demande enregistrée. Nous reviendrons vers vous rapidement[cite: 10].', true); })
                     .catch(function () { lastSaved = ''; });
             }
 
@@ -248,8 +253,8 @@
                 var service = document.getElementById('c_service').value;
                 var msg = document.getElementById('c_msg').value.trim().slice(0, 1500);
 
-                if (!name || !msg) { setNote('Merci de remplir le nom et le message.', false); return; }
-                if (Date.now() - pageLoadedAt < 3000) { setNote('Patientez un instant avant l\'envoi.', false); return; }
+                if (!name || !msg) { setNote('Merci de remplir le nom et le message[cite: 10].', false); return; }
+                if (Date.now() - pageLoadedAt < 3000) { setNote('Patientez un instant avant l\'envoi[cite: 10].', false); return; }
                 if (!SERVICES[service]) return;
                 setNote('', false);
 
